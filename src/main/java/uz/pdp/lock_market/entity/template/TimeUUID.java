@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.entity.time;
+package uz.pdp.lock_market.entity.template;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @MappedSuperclass
-@SuperBuilder
 @NoArgsConstructor
 public abstract class TimeUUID {
     @Id
@@ -26,6 +25,7 @@ public abstract class TimeUUID {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    private boolean deleted;
 }

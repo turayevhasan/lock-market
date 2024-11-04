@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.entity.time;
+package uz.pdp.lock_market.entity.template;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,4 +25,6 @@ public abstract class TimeLong {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    private boolean deleted;
 }

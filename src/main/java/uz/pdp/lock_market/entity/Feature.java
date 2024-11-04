@@ -7,7 +7,7 @@ import org.hibernate.type.SqlTypes;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.enums.DoorType;
 import uz.pdp.lock_market.enums.UnlockType;
-import uz.pdp.lock_market.entity.time.TimeLong;
+import uz.pdp.lock_market.entity.template.TimeLong;
 
 import java.util.List;
 

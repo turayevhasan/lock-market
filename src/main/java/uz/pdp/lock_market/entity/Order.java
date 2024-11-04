@@ -2,7 +2,8 @@ package uz.pdp.lock_market.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import uz.pdp.lock_market.entity.time.TimeLong;
+import uz.pdp.lock_market.entity.template.TimeLong;
+import uz.pdp.lock_market.enums.OrderStatus;
 
 import java.util.List;
 
@@ -14,9 +15,6 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 public class Order extends TimeLong {
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-    private List<OrderLine> orderLines;
-
     @Column(nullable = false)
     private String customerName;
 
@@ -46,4 +44,15 @@ public class Order extends TimeLong {
 
     @Column(nullable = false)
     private Boolean installSoft;
+
+    @Column(nullable = false)
+    private Long orderPrice;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private OrderStatus status = OrderStatus.IN_PROGRESS;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    private List<OrderLine> orderLines;
 }

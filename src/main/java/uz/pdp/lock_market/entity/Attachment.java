@@ -4,8 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
-import uz.pdp.lock_market.entity.time.TimeUUID;
-import uz.pdp.lock_market.util.CoreUtils;
+import uz.pdp.lock_market.entity.template.TimeUUID;
+import uz.pdp.lock_market.util.BaseConstants;
 
 @Getter
 @Setter
@@ -28,6 +28,6 @@ public class Attachment extends TimeUUID {
     private String contentType;
 
     public String getFilePath() {
-        return CoreUtils.FILE_UPLOAD_PATH + "/" + super.getId() + "." + this.extension;
+        return BaseConstants.FILE_UPLOAD_PATH + "/" + super.getId() + "." + this.extension;
     }
 }

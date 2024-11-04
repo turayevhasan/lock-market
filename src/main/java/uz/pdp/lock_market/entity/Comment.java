@@ -2,7 +2,7 @@ package uz.pdp.lock_market.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import uz.pdp.lock_market.entity.time.TimeLong;
+import uz.pdp.lock_market.entity.template.TimeLong;
 
 @Getter
 @Setter
