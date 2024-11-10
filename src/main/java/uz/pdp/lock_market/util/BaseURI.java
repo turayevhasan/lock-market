@@ -4,4 +4,5 @@ public interface BaseURI {
     String API1 = "/api/v1";
     String FILE = "/file";
     String AUTH = "/auth";
+    String FEATURE = "/feature";
 }
