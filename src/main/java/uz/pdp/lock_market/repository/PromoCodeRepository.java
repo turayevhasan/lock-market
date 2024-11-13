@@ -18,8 +18,8 @@ public interface PromoCodeRepository extends JpaRepository<PromoCode, Long> {
 
     @Query("select p from PromoCode p " +
             "where (:code is null or lower(p.code) like lower(concat('%', :code, '%'))) " +
-            "and (:discountPriceLessThan is null or p.discountPrice < :discountPriceLessThan) " +
-            "and (:discountPriceMoreThan is null or p.discountPrice > :discountPriceMoreThan) " +
+            "and (:discountPriceLessThan is null or p.discountPrice <= :discountPriceLessThan) " +
+            "and (:discountPriceMoreThan is null or p.discountPrice >= :discountPriceMoreThan) " +
             "and (:active is null or p.active = :active)")
     Page<PromoCode> findAllByFilters(
             @Param("code") String code,
