@@ -37,7 +37,8 @@ public class CategoryService {
                     .orElseThrow(RestException.thew(ErrorTypeEnum.FILE_NOT_FOUND));
 
         }
-        Category category = new Category(req.getName(), attachment);
+        String photoPath = attachment == null ? "" : attachment.getFilePath();
+        Category category = new Category(req.getName(), photoPath);
         categoryRepository.save(category);  //saving
 
         return CategoryMapper.entityToDto(category);
@@ -56,7 +57,7 @@ public class CategoryService {
         if (req.getPhotoId() != null) {
             Attachment photo = attachmentRepository.findById(req.getPhotoId())
                     .orElseThrow(RestException.thew(ErrorTypeEnum.FILE_NOT_FOUND));
-            category.setPhoto(photo);
+            category.setPhotoPath(photo.getFilePath());
         }
         categoryRepository.save(category); //updating
 
