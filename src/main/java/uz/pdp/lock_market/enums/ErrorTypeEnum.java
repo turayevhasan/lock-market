@@ -33,7 +33,9 @@ public enum ErrorTypeEnum {
     PROMOCODE_IS_NOT_VALID,
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND),
     ORDER_ALREADY_IN_THIS_STATUS,
-    CATEGORY_ALREADY_EXISTS;
+    CATEGORY_ALREADY_EXISTS,
+    COMMENTARY_NOT_FOUND(HttpStatus.NOT_FOUND),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private HttpStatus status = HttpStatus.BAD_REQUEST;
 
