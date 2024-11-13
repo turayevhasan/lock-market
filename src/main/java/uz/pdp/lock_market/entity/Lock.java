@@ -36,7 +36,4 @@ public class Lock extends TimeLong {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private LockType lockType;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lock")
-    private List<Commentary> commentaries;
 }

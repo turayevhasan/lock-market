@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import uz.pdp.lock_market.entity.Category;
 import uz.pdp.lock_market.entity.PromoCode;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,7 +20,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query("select c from Category c where (:name is null or lower(c.name) like lower(concat('%', :name, '%'))) ")
     Page<Category> findAllByFilters(
-            @Param("code") String name,
+            @Param("name") String name,
             Pageable pageable
     );
 }
