@@ -1,6 +1,7 @@
 package uz.pdp.lock_market.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,9 +51,15 @@ public class AuthService {
                 .role(role)
                 .build();
 
-        userRepository.save(user);
+        try {
+            String link = "http://localhost:8080/api/v1/auth/activate/" + user.getEmail();
+            String body = "<a href=\"%s\">CLICK_TO_CONFIRM</a>".formatted(link);
+            mailService.sendMessage(user.getEmail(), body, "Please complete registration", "Complete Registration");
+        } catch (MessagingException e) {
+            throw RestException.restThrow(EMAIL_NOT_VALID);
+        }
 
-        mailService.sendActivationEmail(user);
+        userRepository.save(user);
 
         return new ResBaseMsg("Success! Verification Sms sent your Email!");
     }

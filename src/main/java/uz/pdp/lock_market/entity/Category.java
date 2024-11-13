@@ -22,4 +22,9 @@ public class Category extends TimeLong {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Lock> locks;
+
+    public Category(String name, Attachment photo) {
+        this.name = name;
+        this.photo = photo;
+    }
 }
