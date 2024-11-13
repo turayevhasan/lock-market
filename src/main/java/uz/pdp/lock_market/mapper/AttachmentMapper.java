@@ -7,9 +7,8 @@ import uz.pdp.lock_market.payload.file.ResUploadFile;
 
 public interface AttachmentMapper {
 
-    static Attachment fromMultipartToEntity(MultipartFile file, String uploadPath) {
+    static Attachment fromMultipartToEntity(MultipartFile file) {
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-
         return Attachment.builder()
                 .originalName(file.getOriginalFilename())
                 .contentType(file.getContentType())
@@ -19,10 +18,8 @@ public interface AttachmentMapper {
     }
 
     static ResUploadFile fromEntityToResDto(Attachment attachment) {
-        String fileName = attachment.getId() + "." + attachment.getExtension();
-
         return new ResUploadFile(
-                fileName,
+                attachment.getId(),
                 attachment.getFilePath(),
                 attachment.getCreatedAt(),
                 attachment.getUpdatedAt()

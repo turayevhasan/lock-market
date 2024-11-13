@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class SendEmailDto {
-    private String from;
     private String to;
     private String subject;
     private String body;

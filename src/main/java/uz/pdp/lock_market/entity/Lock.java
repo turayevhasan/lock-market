@@ -21,6 +21,9 @@ public class Lock extends TimeLong {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(nullable = false)
+    private Long price;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Category category;
 
