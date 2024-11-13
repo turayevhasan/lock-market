@@ -6,11 +6,10 @@ import uz.pdp.lock_market.payload.category.CategoryRes;
 public interface CategoryMapper {
 
     static CategoryRes entityToDto(Category category) {
-        String path = category.getPhoto() == null ? "" : category.getPhoto().getFilePath();
         return CategoryRes.builder()
                 .id(category.getId())
                 .name(category.getName())
-                .photoPath(path)
+                .photoPath(category.getPhotoPath())
                 .createdAt(category.getCreatedAt())
                 .updatedAt(category.getUpdatedAt())
                 .build();
