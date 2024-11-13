@@ -2,10 +2,13 @@ package uz.pdp.lock_market.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import uz.pdp.lock_market.enums.LockType;
 import uz.pdp.lock_market.entity.template.TimeLong;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,8 +30,8 @@ public class Lock extends TimeLong {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Category category;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Attachment> photos;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<String> photosPaths;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Feature feature;

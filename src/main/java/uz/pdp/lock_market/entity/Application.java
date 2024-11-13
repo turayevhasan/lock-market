@@ -1,8 +1,6 @@
 package uz.pdp.lock_market.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import uz.pdp.lock_market.entity.template.TimeLong;
 
@@ -24,8 +22,8 @@ public class Application extends TimeLong {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
-    private Long lockId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Lock lock;
 
     @Column(nullable = false)
     private Integer lockAmount;
@@ -35,4 +33,7 @@ public class Application extends TimeLong {
 
     @Column(nullable = false)
     private Boolean helpSetup;
+
+    @Column(nullable = false)
+    private Boolean active;
 }

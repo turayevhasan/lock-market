@@ -5,6 +5,7 @@ import lombok.*;
 import uz.pdp.lock_market.entity.template.TimeLong;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,15 +17,13 @@ import java.util.List;
 public class Category extends TimeLong {
     @Column(unique = true, nullable = false)
     private String name;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Attachment photo;
+    private String photoPath;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Lock> locks;
 
-    public Category(String name, Attachment photo) {
+    public Category(String name, String photo) {
         this.name = name;
-        this.photo = photo;
+        this.photoPath = photo;
     }
 }
