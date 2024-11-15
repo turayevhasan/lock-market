@@ -1,40 +1,10 @@
 package uz.pdp.lock_market.mapper;
 
-import org.springframework.data.domain.Page;
 import uz.pdp.lock_market.entity.Feature;
-import uz.pdp.lock_market.entity.User;
-import uz.pdp.lock_market.enums.Color;
-import uz.pdp.lock_market.enums.DoorType;
-import uz.pdp.lock_market.enums.UnlockType;
-import uz.pdp.lock_market.payload.auth.res.ResUserSimple;
 import uz.pdp.lock_market.payload.feature.req.ReqFeature;
 import uz.pdp.lock_market.payload.feature.res.ResFeature;
 
-import java.util.ArrayList;
-
 import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
-//import java.util.List;
-//private Integer memoryOfCards;
-//
-//private Boolean application;
-//
-//private List<Color> colors;
-//
-//private String material;
-//
-//private String battery;
-//
-//private UnlockType unlockType;
-//
-//private DoorType doorType;
-//
-//private String doorWidth;
-//
-//private String lockSize;
-//
-//private Double weight;
-//
-//private String equipment;
 
 public interface FeatureMapper {
     static ResFeature fromEntityToDto(Feature feature) {
