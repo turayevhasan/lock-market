@@ -37,7 +37,8 @@ public enum ErrorTypeEnum {
     PHONE_NUMBER_NOT_VALID,
     APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND),
     COMMENTARY_NOT_FOUND(HttpStatus.NOT_FOUND),
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND);
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND),
+    LOCK_ALREADY_EXISTS;
 
     private HttpStatus status = HttpStatus.BAD_REQUEST;
 
