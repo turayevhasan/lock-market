@@ -10,4 +10,5 @@ public interface BaseURI {
     String APP = "/application";
     String COMMENT = "/comment";
     String COMMENTARY = "/commentary";
+    String FEATURE = "/feature";
 }
