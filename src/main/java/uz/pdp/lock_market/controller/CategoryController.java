@@ -24,7 +24,7 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResult<CategoryRes> updateCategory(@PathVariable("id") long id, @RequestBody @Valid CategoryUpdateReq req){
+    public ApiResult<CategoryRes> updateCategory(@PathVariable("id") long id, @RequestBody CategoryUpdateReq req){
         return ApiResult.successResponse(categoryService.update(id, req));
     }
 

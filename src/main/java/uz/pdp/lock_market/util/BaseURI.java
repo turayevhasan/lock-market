@@ -7,6 +7,7 @@ public interface BaseURI {
     String ORDER = "/order";
     String PROMO_CODE = "/promocode";
     String CATEGORY = "/category";
+    String LOCK = "/lock";
     String APP = "/application";
     String COMMENT = "/comment";
     String COMMENTARY = "/commentary";

@@ -31,7 +31,7 @@ public class Lock extends TimeLong {
     private Category category;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    private List<String> photosPaths;
+    private List<UUID> photoIds;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Feature feature;

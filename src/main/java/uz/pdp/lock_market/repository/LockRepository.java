@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface LockRepository extends JpaRepository<Lock, Long> {
     Optional<Lock> findByName(String name);
+    boolean existsByName(String name);
 }
