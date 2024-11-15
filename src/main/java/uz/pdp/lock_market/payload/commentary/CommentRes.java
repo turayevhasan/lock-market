@@ -1,23 +1,22 @@
-
-package uz.pdp.lock_market.payload.file;
+package uz.pdp.lock_market.payload.commentary;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import uz.pdp.lock_market.util.FormatPatterns;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
-public class ResUploadFile {
-    private UUID id;
-    private String filePath;
+@NoArgsConstructor
+public class CommentRes {
+    private String name;
+    private String email;
+    private String text;
+    private Integer stars;
 
-    // Using Timestamp instead of LocalDateTime
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)
     private LocalDateTime createdAt;
 

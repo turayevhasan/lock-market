@@ -22,10 +22,10 @@ public class Order extends TimeLong {
     private String customerSurname;
 
     @Column(nullable = false)
-    private String CustomerPhone;
+    private String customerPhone;
 
     @Column(nullable = false)
-    private String CustomerEmail;
+    private String customerEmail;
 
     @Column(nullable = false)
     private String deliveryType;
@@ -46,7 +46,10 @@ public class Order extends TimeLong {
     private Boolean installSoft;
 
     @Column(nullable = false)
-    private Long orderPrice;
+    private String promoCode;
+
+    @Column(nullable = false)
+    private Long fullPrice;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

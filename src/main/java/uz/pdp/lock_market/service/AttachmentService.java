@@ -1,8 +1,6 @@
 package uz.pdp.lock_market.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,6 @@ import uz.pdp.lock_market.mapper.AttachmentMapper;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.payload.file.ResUploadFile;
 import uz.pdp.lock_market.repository.AttachmentRepository;
-import uz.pdp.lock_market.util.BaseConstants;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +26,6 @@ import static uz.pdp.lock_market.enums.ErrorTypeEnum.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AttachmentService {
     private final AttachmentRepository attachmentRepository;
 
@@ -37,18 +33,14 @@ public class AttachmentService {
         if (file == null || file.isEmpty())
             throw RestException.restThrow(FILE_NOT_FOUND);
 
-        Attachment attachment = AttachmentMapper.fromMultipartToEntity(file, BaseConstants.FILE_UPLOAD_PATH);
+        Attachment attachment = AttachmentMapper.fromMultipartToEntity(file);
         attachmentRepository.save(attachment); //save file in db
 
         try {
             Files.copy(file.getInputStream(), Paths.get(attachment.getFilePath()), StandardCopyOption.REPLACE_EXISTING); //save file in memory
         } catch (IOException e) {
-            log.error("Failed to copy file", e);
             throw RestException.restThrow(ErrorTypeEnum.ERROR_SAVING_FILE);
         }
-
-
-
         return AttachmentMapper.fromEntityToResDto(attachment);
     }
 
