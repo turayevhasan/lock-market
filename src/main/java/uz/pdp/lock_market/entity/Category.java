@@ -17,13 +17,13 @@ import java.util.UUID;
 public class Category extends TimeLong {
     @Column(unique = true, nullable = false)
     private String name;
-    private String photoPath;
+    private UUID photoId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<Lock> locks;
 
-    public Category(String name, String photo) {
+    public Category(String name, UUID photoId) {
         this.name = name;
-        this.photoPath = photo;
+        this.photoId = photoId;
     }
 }

@@ -20,7 +20,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class LockRes {
-
     private Long id;
 
     private String name;

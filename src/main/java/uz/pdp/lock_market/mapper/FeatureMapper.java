@@ -54,6 +54,5 @@ public interface FeatureMapper {
         feature.setLockSize(getIfExists(reqFeature.getLockSize(),feature.getLockSize()));
         feature.setWeight(getIfExists(reqFeature.getWeight(),feature.getWeight()));
         feature.setEquipment(getIfExists(reqFeature.getEquipment(),feature.getEquipment()));
-
     }
 }

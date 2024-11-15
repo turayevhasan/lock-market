@@ -1,5 +1,6 @@
 package uz.pdp.lock_market.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.payload.promo.PromoCodeUpdateReq;
@@ -23,7 +24,7 @@ public class PromoCodeController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResult<PromoCodeRes> updatePromoCode(@PathVariable("id") long id, @RequestBody PromoCodeUpdateReq req) {
+    public ApiResult<PromoCodeRes> updatePromoCode(@PathVariable("id") long id, @RequestBody @Valid PromoCodeUpdateReq req) {
         return ApiResult.successResponse(promoCodeService.update(id, req));
     }
 
@@ -33,7 +34,7 @@ public class PromoCodeController {
     }
 
     @GetMapping("/check-promo-code/{code}")
-    public ApiResult<PromoCodeRes> checkPromoCode(@PathVariable String code){
+    public ApiResult<PromoCodeRes> checkPromoCode(@PathVariable String code) {
         return ApiResult.successResponse(promoCodeService.checkPromoCode(code));
     }
 

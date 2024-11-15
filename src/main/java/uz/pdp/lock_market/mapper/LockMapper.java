@@ -20,6 +20,8 @@ public interface LockMapper {
                 .featureRes(lock.getFeature() != null ? FeatureMapper.fromEntityToDto(lock.getFeature()) : null)
                 .photoPaths(photoPaths)
                 .lockType(lock.getLockType())
+                .createdAt(lock.getCreatedAt())
+                .updatedAt(lock.getUpdatedAt())
                 .build();
     }
 

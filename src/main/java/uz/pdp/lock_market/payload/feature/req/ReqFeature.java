@@ -4,6 +4,9 @@ import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import uz.pdp.lock_market.entity.base.Battery;
+import uz.pdp.lock_market.entity.base.DoorWidth;
+import uz.pdp.lock_market.entity.base.LockSize;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.enums.DoorType;
 import uz.pdp.lock_market.enums.UnlockType;
@@ -20,15 +23,15 @@ public class ReqFeature {
 
     private String material;
 
-    private String battery;
+    private Battery battery;
 
     private UnlockType unlockType;
 
     private DoorType doorType;
 
-    private String doorWidth;
+    private DoorWidth doorWidth;
 
-    private String lockSize;
+    private LockSize lockSize;
 
     private Double weight;
 
