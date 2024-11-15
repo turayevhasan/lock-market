@@ -1,5 +1,6 @@
 package uz.pdp.lock_market.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.payload.base.ApiResult;
@@ -19,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/create")
-    public ApiResult<ResBaseMsg> addComment(@RequestBody CommentAddReq req){
+    public ApiResult<ResBaseMsg> addComment(@RequestBody @Valid CommentAddReq req){
       return ApiResult.successResponse(commentService.add(req));
     }
 

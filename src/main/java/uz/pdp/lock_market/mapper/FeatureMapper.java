@@ -26,6 +26,22 @@ public interface FeatureMapper {
                 .build();
     }
 
+    static Feature reqToEntity(ReqFeature feature) {
+        return Feature.builder()
+                .memoryOfCards(feature.getMemoryOfCards())
+                .application(feature.getApplication())
+                .colors(feature.getColors())
+                .material(feature.getMaterial())
+                .battery(feature.getBattery())
+                .unlockType(feature.getUnlockType())
+                .doorType(feature.getDoorType())
+                .doorWidth(feature.getDoorWidth())
+                .lockSize(feature.getLockSize())
+                .weight(feature.getWeight())
+                .equipment(feature.getEquipment())
+                .build();
+    }
+
 
     static void updatedAdd(Feature feature, ReqFeature reqFeature) {
         feature.setMemoryOfCards(getIfExists(reqFeature.getMemoryOfCards(),feature.getMemoryOfCards()));
