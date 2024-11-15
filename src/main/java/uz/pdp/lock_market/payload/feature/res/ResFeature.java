@@ -1,13 +1,15 @@
 package uz.pdp.lock_market.payload.feature.res;
 
+import lombok.Builder;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.enums.DoorType;
 import uz.pdp.lock_market.enums.UnlockType;
 
+import java.time.LocalDateTime;
 import java.util.List;
-
+@Builder
 public class ResFeature {
-    private String id;
+    private Long id;
     private Integer memoryOfCards;
     private Boolean application;
     private List<Color> colors;
@@ -19,6 +21,6 @@ public class ResFeature {
     private String lockSize;
     private Double weight;
     private String equipment;
-    private String createdAt;
-    private String updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
