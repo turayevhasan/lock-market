@@ -35,5 +35,6 @@ public class Application extends TimeLong {
     private Boolean helpSetup;
 
     @Column(nullable = false)
-    private Boolean active;
+    @Builder.Default
+    private Boolean active = Boolean.TRUE;
 }

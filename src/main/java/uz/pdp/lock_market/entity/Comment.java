@@ -13,7 +13,7 @@ import uz.pdp.lock_market.entity.template.TimeLong;
 @Table(name = "comment")
 public class Comment extends TimeLong {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Commentary commentary;
+    private Lock lock;
 
     @Column(nullable = false)
     private Integer stars;

@@ -33,10 +33,13 @@ public class Lock extends TimeLong {
     @JdbcTypeCode(SqlTypes.JSON)
     private List<UUID> photoIds;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Feature feature;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private LockType lockType;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lock")
+    private List<Comment> comments;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "lock")
+    private Feature feature;
 }

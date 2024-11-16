@@ -1,5 +1,6 @@
 package uz.pdp.lock_market.payload.lock.req;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class LockAddReq {
-
     @NotBlank
     private String name;
 
@@ -20,14 +20,15 @@ public class LockAddReq {
     private String description;
 
     @NotNull
+    @Min(1)
     private Long price;
 
     @NotNull
     private Long categoryId;
 
-    @NotBlank
+    @NotNull
     private List<UUID> photoIds;
 
-    @NotBlank
+    @NotNull
     private LockType lockType;
 }

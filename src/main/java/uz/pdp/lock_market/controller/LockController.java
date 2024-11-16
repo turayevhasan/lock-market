@@ -3,6 +3,8 @@ package uz.pdp.lock_market.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import uz.pdp.lock_market.entity.base.LockSize;
+import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.category.CategoryRes;
 import uz.pdp.lock_market.payload.category.CategoryUpdateReq;
@@ -26,7 +28,7 @@ public class LockController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResult<LockRes> updateLock(@PathVariable("id") long id, @RequestBody LockUpdateReq req) {
+    public ApiResult<LockRes> updateLock(@PathVariable("id") long id, @RequestBody @Valid LockUpdateReq req) {
         return ApiResult.successResponse(lockService.update(id, req));
     }
 
@@ -35,11 +37,16 @@ public class LockController {
         return ApiResult.successResponse(lockService.get(id));
     }
 
-    @GetMapping("/get-all-by-category/{id}")
+    @GetMapping("/get-all-by-filter/{categoryId}")
     public ApiResult<List<LockRes>> getAllLockByCategory(
-            @PathVariable("id") long id,
+            @PathVariable("categoryId") long categoryId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ApiResult.successResponse(lockService.getAllByCategory(page, size, id));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long startPrice,
+            @RequestParam(required = false) Long endPrice,
+            @RequestParam(required = false) Color color,
+            @RequestParam(required = false) LockSize lockSize,
+            @RequestParam(required = false) String material) {
+        return ApiResult.successResponse(lockService.getAllByCategory(categoryId, page, size, startPrice, endPrice, color, lockSize, material));
     }
 }
