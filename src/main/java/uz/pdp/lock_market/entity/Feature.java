@@ -22,6 +22,9 @@ import java.util.List;
 @Entity
 @Table(name = "feature")
 public class Feature extends TimeLong {
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private Lock lock;
+
     @Column(nullable = false)
     private Integer memoryOfCards;
 

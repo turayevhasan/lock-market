@@ -23,6 +23,7 @@ import uz.pdp.lock_market.repository.FeatureRepository;
 import uz.pdp.lock_market.repository.LockRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,68 +33,53 @@ public class LockService {
     private final LockRepository lockRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
-    private final FeatureRepository featureRepository;
 
-
-    public LockRes add(LockAddReq lockAddReq) {
-
-        if (lockRepository.existsByName(lockAddReq.getName())) {
+    public LockRes add(LockAddReq req) {
+        if (lockRepository.existsByName(req.getName())) {
             throw RestException.restThrow(ErrorTypeEnum.LOCK_ALREADY_EXISTS);
         }
 
-        Category category = categoryRepository.findById(lockAddReq.getCategoryId())
+        Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(RestException.thew(ErrorTypeEnum.CATEGORY_NOT_FOUND));
 
-        List<String> photos = getPhotoPaths(lockAddReq.getPhotoIds());
+        List<String> photos = getPhotoPaths(req.getPhotoIds());
 
         Lock lock = Lock.builder()
-                .name(lockAddReq.getName())
-                .description(lockAddReq.getDescription())
-                .price(lockAddReq.getPrice())
+                .name(req.getName())
+                .description(req.getDescription())
+                .price(req.getPrice())
                 .category(category)
-                .photoIds(lockAddReq.getPhotoIds())
-                .lockType(lockAddReq.getLockType())
+                .photoIds(req.getPhotoIds())
+                .lockType(req.getLockType())
                 .build();
 
-        lockRepository.save(lock);
+        lockRepository.save(lock); //saving
 
         return LockMapper.entityToDto(lock, photos);
     }
 
-    public LockRes update(Long lockId, LockUpdateReq lockUpdateReq) {
+    public LockRes update(Long lockId, LockUpdateReq req) {
         Lock lock = lockRepository.findById(lockId)
                 .orElseThrow(() -> RestException.restThrow(ErrorTypeEnum.LOCK_NOT_FOUND));
 
-        if (lockUpdateReq.getCategoryId() != null) {
-            Category category = categoryRepository.findById(lockUpdateReq.getCategoryId())
+        //updating category
+        if (req.getCategoryId() != null) {
+            Category category = categoryRepository.findById(req.getCategoryId())
                     .orElseThrow(RestException.thew(ErrorTypeEnum.CATEGORY_NOT_FOUND));
 
             lock.setCategory(category);
         }
 
-
-        if (!lockUpdateReq.getPhotoIds().isEmpty()) {
-            for (UUID photoId : lockUpdateReq.getPhotoIds()) {
-                Attachment attachment = attachmentRepository.findById(photoId)
-                        .orElseThrow(RestException.thew(ErrorTypeEnum.ATTACHMENT_NOT_FOUND));
-
-                lock.getPhotoIds().add(attachment.getId());
-            }
+        //updating lock photos
+        List<String> photos = Collections.emptyList();
+        if (!req.getPhotoIds().isEmpty()) {
+            photos = getPhotoPaths(lock.getPhotoIds());
+            lock.setPhotoIds(req.getPhotoIds()); //updated
         }
-        List<String> photos = getPhotoPaths(lock.getPhotoIds());
 
-        LockMapper.updateDetails(lock, lockUpdateReq);
+        LockMapper.updateDetails(lock, req);
+        lockRepository.save(lock); //saving
 
-        if (lockUpdateReq.getFeatureReq() != null) {
-            if (lock.getFeature() != null)
-                FeatureMapper.updatedAdd(lock.getFeature(), lockUpdateReq.getFeatureReq());
-
-            else
-                lock.setFeature(FeatureMapper.reqToEntity(lockUpdateReq.getFeatureReq()));
-
-            featureRepository.save(lock.getFeature());
-        }
-        lockRepository.save(lock);
         return LockMapper.entityToDto(lock, photos);
     }
 
@@ -106,12 +92,12 @@ public class LockService {
         return LockMapper.entityToDto(lock, photos);
     }
 
-    public List<LockRes> getAllByCategory(long categoryId, int page, int size, long startPrice, long endPrice, Color color, LockSize lockSize, String material) {
-        if (categoryRepository.existsById(categoryId)) {
+    public List<LockRes> getAllByCategory(long categoryId, int page, int size, Long startPrice, Long endPrice, Color color, LockSize lockSize, String material) {
+        if (!categoryRepository.existsById(categoryId)) {
             throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NOT_FOUND);
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdAt"));
-        return lockRepository.filterLocks(categoryId, startPrice, endPrice, material, color, lockSize, pageable)
+        return lockRepository.filterLocks(categoryId, startPrice, endPrice, pageable)
                 .stream()
                 .map(this::entityToRes)
                 .toList();

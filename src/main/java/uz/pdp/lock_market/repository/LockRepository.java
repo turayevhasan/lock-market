@@ -21,18 +21,13 @@ public interface LockRepository extends JpaRepository<Lock, Long> {
     @Query("""
             SELECT l FROM Lock l
             WHERE l.category.id = :categoryId
-            AND l.price BETWEEN :startPrice AND :endPrice
-            AND (:color is null or :color in (l.feature.colors))
-            AND (:material is null or lower(l.feature.material) like lower(concat('%', :material, '%')))
-            AND (:lockSize is null or l.feature.lockSize = :lockSize)
+            AND (:startPrice IS NULL OR l.price >= :startPrice)
+            AND (:endPrice IS NULL OR l.price <= :endPrice)
             """)
     Page<Lock> filterLocks(
             @Param("categoryId") Long categoryId,
             @Param("startPrice") Long startPrice,
             @Param("endPrice") Long endPrice,
-            @Param("material") String material,
-            @Param("color") Color color,
-            @Param("lockSize") LockSize lockSize,
             Pageable pageable
     );
 

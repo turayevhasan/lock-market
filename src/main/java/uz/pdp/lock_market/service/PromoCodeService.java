@@ -1,6 +1,7 @@
 package uz.pdp.lock_market.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import uz.pdp.lock_market.entity.PromoCode;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
-import uz.pdp.lock_market.mapper.OrderMapper;
 import uz.pdp.lock_market.mapper.PromoCodeMapper;
 import uz.pdp.lock_market.payload.promo.PromoCodeUpdateReq;
 import uz.pdp.lock_market.payload.promo.PromoCodeAddReq;
@@ -51,25 +51,20 @@ public class PromoCodeService {
         PromoCode promoCode = promoCodeRepository.findById(id)
                 .orElseThrow(() -> RestException.restThrow(ErrorTypeEnum.PROMOCODE_NOT_FOUND));
 
-        return PromoCodeMapper.entityToDto(promoCode);
-    }
-
-    public List<PromoCodeRes> getAll(int page, int size, String code, Long discountPriceLessThan, Long discountPriceMoreThan, Boolean active) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdAt"));
-
-        return promoCodeRepository.findAllByFilters(code, discountPriceLessThan, discountPriceMoreThan, active, pageable)
-                .stream()
-                .map(PromoCodeMapper::entityToDto)
-                .toList();
-    }
-
-    public PromoCodeRes checkPromoCode(String code) {
-        PromoCode promoCode = promoCodeRepository.findByCode(code)
-                .orElseThrow(() -> RestException.restThrow(ErrorTypeEnum.PROMOCODE_NOT_FOUND));
-
         if (!promoCode.getActive())
             throw RestException.restThrow(ErrorTypeEnum.PROMOCODE_IS_NOT_VALID);
 
         return PromoCodeMapper.entityToDto(promoCode);
     }
+
+    public List<PromoCodeRes> getAll(int page, int size, Long minDiscountPrice, Long maxDiscountPrice, Boolean active) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdAt"));
+
+        Page<PromoCode> all = promoCodeRepository.findAllByFilter(active, minDiscountPrice, maxDiscountPrice, pageable);
+        return all
+                .stream()
+                .map(PromoCodeMapper::entityToDto)
+                .toList();
+    }
+
 }

@@ -33,20 +33,14 @@ public class PromoCodeController {
         return ApiResult.successResponse(promoCodeService.getOne(id));
     }
 
-    @GetMapping("/check-promo-code/{code}")
-    public ApiResult<PromoCodeRes> checkPromoCode(@PathVariable String code) {
-        return ApiResult.successResponse(promoCodeService.checkPromoCode(code));
-    }
-
     @GetMapping("/get-all")
     public ApiResult<List<PromoCodeRes>> getAllPromoCode(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String code,
-            @RequestParam(required = false) Long discountPriceLessThan,
-            @RequestParam(required = false) Long discountPriceMoreThan,
+            @RequestParam(required = false) Long minDiscountPrice,
+            @RequestParam(required = false) Long maxDiscountPrice,
             @RequestParam(required = false) Boolean active) {
-        return ApiResult.successResponse(promoCodeService.getAll(page, size, code, discountPriceLessThan, discountPriceMoreThan, active));
+        return ApiResult.successResponse(promoCodeService.getAll(page, size, minDiscountPrice, maxDiscountPrice, active));
     }
 
 }

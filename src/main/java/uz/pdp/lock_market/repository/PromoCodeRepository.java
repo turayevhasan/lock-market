@@ -16,16 +16,16 @@ public interface PromoCodeRepository extends JpaRepository<PromoCode, Long> {
 
     Optional<PromoCode> findByCode(String code);
 
-    @Query("select p from PromoCode p " +
-            "where (:code is null or lower(p.code) like lower(concat('%', :code, '%'))) " +
-            "and (:discountPriceLessThan is null or p.discountPrice <= :discountPriceLessThan) " +
-            "and (:discountPriceMoreThan is null or p.discountPrice >= :discountPriceMoreThan) " +
-            "and (:active is null or p.active = :active)")
-    Page<PromoCode> findAllByFilters(
-            @Param("code") String code,
-            @Param("discountPriceLessThan") Long discountPriceLessThan,
-            @Param("discountPriceMoreThan") Long discountPriceMoreThan,
+    @Query("""
+                SELECT p FROM PromoCode p
+                WHERE (:active IS NULL OR p.active = :active)
+                AND (:minDiscountPrice IS NULL OR p.discountPrice >= :minDiscountPrice)
+                AND (:maxDiscountPrice IS NULL OR p.discountPrice <= :maxDiscountPrice)
+            """)
+    Page<PromoCode> findAllByFilter(
             @Param("active") Boolean active,
-            Pageable pageable
-    );
+            @Param("minDiscountPrice") Long minDiscountPrice,
+            @Param("maxDiscountPrice") Long maxDiscountPrice,
+            Pageable pageable);
+
 }

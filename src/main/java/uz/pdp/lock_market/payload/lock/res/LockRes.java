@@ -34,8 +34,6 @@ public class LockRes {
 
     private LockType lockType;
 
-    private ResFeature featureRes;
-
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)
     private LocalDateTime createdAt;

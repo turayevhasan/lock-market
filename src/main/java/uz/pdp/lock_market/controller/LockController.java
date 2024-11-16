@@ -28,7 +28,7 @@ public class LockController {
     }
 
     @PutMapping("/update/{id}")
-    public ApiResult<LockRes> updateLock(@PathVariable("id") long id, @RequestBody LockUpdateReq req) {
+    public ApiResult<LockRes> updateLock(@PathVariable("id") long id, @RequestBody @Valid LockUpdateReq req) {
         return ApiResult.successResponse(lockService.update(id, req));
     }
 
@@ -42,8 +42,8 @@ public class LockController {
             @PathVariable("categoryId") long categoryId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) long startPrice,
-            @RequestParam(required = false) long endPrice,
+            @RequestParam(required = false) Long startPrice,
+            @RequestParam(required = false) Long endPrice,
             @RequestParam(required = false) Color color,
             @RequestParam(required = false) LockSize lockSize,
             @RequestParam(required = false) String material) {

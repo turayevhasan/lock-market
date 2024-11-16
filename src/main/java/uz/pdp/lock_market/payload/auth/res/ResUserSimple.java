@@ -19,7 +19,8 @@ public class ResUserSimple {
     private UUID id;
     private String email;
     private String role;
-    private String profileImagePath;
+    private String photoPath;
+    private boolean active;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)
@@ -29,14 +30,13 @@ public class ResUserSimple {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)
     private LocalDateTime updatedAt;
 
-    private boolean deleted;
-
     public ResUserSimple(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.role = user.getRole().getName();
-        this.profileImagePath = user.getProfileImagePath();
+        this.photoPath = user.getPhotoPath();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
+        this.active = user.isActive();
     }
 }
