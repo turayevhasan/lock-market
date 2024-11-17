@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.entity.base.LockSize;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.payload.base.ApiResult;
-import uz.pdp.lock_market.payload.category.CategoryRes;
-import uz.pdp.lock_market.payload.category.CategoryUpdateReq;
 import uz.pdp.lock_market.payload.lock.req.LockAddReq;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
 import uz.pdp.lock_market.payload.lock.res.LockRes;

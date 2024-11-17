@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResUserSimple {
+public class UserRes {
     private UUID id;
     private String email;
     private String role;
@@ -30,7 +30,7 @@ public class ResUserSimple {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)
     private LocalDateTime updatedAt;
 
-    public ResUserSimple(User user) {
+    public UserRes(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.role = user.getRole().getName();

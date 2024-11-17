@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload.promo;
+package uz.pdp.lock_market.payload.promo.req;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

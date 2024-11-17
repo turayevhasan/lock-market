@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResSignIn {
-    private ResUserSimple user;
+public class SignInRes {
+    private UserRes user;
     private TokenDto token;
 }

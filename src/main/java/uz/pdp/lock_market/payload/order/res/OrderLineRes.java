@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload.order;
+package uz.pdp.lock_market.payload.order.res;
 
 import lombok.*;
 

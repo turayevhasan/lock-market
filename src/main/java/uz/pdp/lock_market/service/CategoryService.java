@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import uz.pdp.lock_market.entity.Category;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
-import uz.pdp.lock_market.payload.category.CategoryUpdateReq;
-import uz.pdp.lock_market.payload.category.CategoryAddReq;
+import uz.pdp.lock_market.payload.category.req.CategoryUpdateReq;
+import uz.pdp.lock_market.payload.category.req.CategoryAddReq;
 import uz.pdp.lock_market.mapper.CategoryMapper;
-import uz.pdp.lock_market.payload.category.CategoryRes;
+import uz.pdp.lock_market.payload.category.res.CategoryRes;
 import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.repository.CategoryRepository;
 

@@ -5,9 +5,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.pdp.lock_market.entity.*;
-import uz.pdp.lock_market.enums.LockType;
-import uz.pdp.lock_market.enums.RoleEnum;
-import uz.pdp.lock_market.enums.UserStatus;
+import uz.pdp.lock_market.entity.base.Battery;
+import uz.pdp.lock_market.entity.base.DoorWidth;
+import uz.pdp.lock_market.entity.base.LockSize;
+import uz.pdp.lock_market.enums.*;
 import uz.pdp.lock_market.repository.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class DataLoader implements CommandLineRunner {
     private final PromoCodeRepository promoCodeRepository;
     private final ApplicationRepository applicationRepository;
     private final LockRepository lockRepository;
+    private final FeatureRepository featureRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -32,6 +34,7 @@ public class DataLoader implements CommandLineRunner {
         userLoad();
         categoryLoad();
         lockLoad();
+        featureLoad();
         promoCodeLoad();
         appLoad();
          */
@@ -167,6 +170,55 @@ public class DataLoader implements CommandLineRunner {
                 .build();
 
         applicationRepository.saveAll(List.of(app1, app2, app3));
+    }
+
+    private void featureLoad(){
+        Feature feature1 = Feature.builder()
+                .lock(lockRepository.findById(1L).orElseThrow())
+                .memoryOfCards(100)
+                .application(true)
+                .colors(List.of(Color.CHROME, Color.BLACK))
+                .material("Material1")
+                .battery(new Battery(4, 5))
+                .unlockType(UnlockType.PIN_CODE)
+                .doorType(DoorType.WOODEN)
+                .doorWidth(new DoorWidth(35.8, 20.6))
+                .lockSize(new LockSize(10, 20, 30))
+                .weight(10.0)
+                .equipment("Equipment1")
+                .build();
+
+        Feature feature2 = Feature.builder()
+                .lock(lockRepository.findById(2L).orElseThrow())
+                .memoryOfCards(120)
+                .application(true)
+                .colors(List.of(Color.CHROME, Color.DEFAULT))
+                .material("Material2")
+                .battery(new Battery(3, 6))
+                .unlockType(UnlockType.KEY)
+                .doorType(DoorType.METAL)
+                .doorWidth(new DoorWidth(34.6, 22.4))
+                .lockSize(new LockSize(12, 22, 33))
+                .weight(12.0)
+                .equipment("Equipment2")
+                .build();
+
+        Feature feature3 = Feature.builder()
+                .lock(lockRepository.findById(3L).orElseThrow())
+                .memoryOfCards(110)
+                .application(true)
+                .colors(List.of(Color.BLACK, Color.DEFAULT))
+                .material("Material3")
+                .battery(new Battery(4, 4))
+                .unlockType(UnlockType.BRACELET)
+                .doorType(DoorType.WOODEN)
+                .doorWidth(new DoorWidth(32.6, 26.6))
+                .lockSize(new LockSize(14, 20, 32))
+                .weight(14.0)
+                .equipment("Equipment3")
+                .build();
+
+        featureRepository.saveAll(List.of(feature1, feature2, feature3));
     }
 
 

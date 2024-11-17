@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
-import uz.pdp.lock_market.payload.comment.CommentAddReq;
-import uz.pdp.lock_market.payload.comment.CommentUpdateReq;
-import uz.pdp.lock_market.payload.comment.CommentRes;
+import uz.pdp.lock_market.payload.comment.req.CommentAddReq;
+import uz.pdp.lock_market.payload.comment.req.CommentUpdateReq;
+import uz.pdp.lock_market.payload.comment.res.CommentRes;
 import uz.pdp.lock_market.service.CommentService;
 import uz.pdp.lock_market.util.BaseURI;
 

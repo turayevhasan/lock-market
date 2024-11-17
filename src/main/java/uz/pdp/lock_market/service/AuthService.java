@@ -15,11 +15,11 @@ import uz.pdp.lock_market.entity.User;
 import uz.pdp.lock_market.enums.RoleEnum;
 import uz.pdp.lock_market.enums.UserStatus;
 import uz.pdp.lock_market.exceptions.RestException;
-import uz.pdp.lock_market.payload.auth.req.ReqRefreshToken;
-import uz.pdp.lock_market.payload.auth.req.ReqSignIn;
-import uz.pdp.lock_market.payload.auth.req.ReqSignUp;
-import uz.pdp.lock_market.payload.auth.res.ResSignIn;
-import uz.pdp.lock_market.payload.auth.res.ResUserSimple;
+import uz.pdp.lock_market.payload.auth.req.RefreshTokenReq;
+import uz.pdp.lock_market.payload.auth.req.SignInReq;
+import uz.pdp.lock_market.payload.auth.req.SignUpReq;
+import uz.pdp.lock_market.payload.auth.res.SignInRes;
+import uz.pdp.lock_market.payload.auth.res.UserRes;
 import uz.pdp.lock_market.payload.auth.res.TokenDto;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.repository.RoleRepository;
@@ -38,7 +38,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public ResBaseMsg signUp(ReqSignUp req) {
+    public ResBaseMsg signUp(SignUpReq req) {
         if (userRepository.existsByEmail(req.getEmail()))
             throw RestException.restThrow(EMAIL_ALREADY_EXISTS);
 
@@ -78,7 +78,7 @@ public class AuthService {
     }
 
 
-    public ResSignIn signIn(ReqSignIn req) {
+    public SignInRes signIn(SignInReq req) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         req.getEmail(),
@@ -90,7 +90,7 @@ public class AuthService {
         return generateSignInRes(userPrincipal.user());
     }
 
-    public TokenDto refreshToken(ReqRefreshToken req) {
+    public TokenDto refreshToken(RefreshTokenReq req) {
         String accessToken = req.getAccessToken().trim();
         accessToken = getTokenWithOutBearer(accessToken);
 
@@ -126,9 +126,9 @@ public class AuthService {
                 token.trim();
     }
 
-    private ResSignIn generateSignInRes(User user) {
-        ResUserSimple resUserSimple = new ResUserSimple(user);
-        return new ResSignIn(resUserSimple, generateTokens(user));
+    private SignInRes generateSignInRes(User user) {
+        UserRes userRes = new UserRes(user);
+        return new SignInRes(userRes, generateTokens(user));
     }
 
     private TokenDto generateTokens(User user) {

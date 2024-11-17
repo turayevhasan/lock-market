@@ -2,9 +2,9 @@ package uz.pdp.lock_market.mapper;
 
 import uz.pdp.lock_market.entity.Comment;
 import uz.pdp.lock_market.entity.Lock;
-import uz.pdp.lock_market.payload.comment.CommentAddReq;
-import uz.pdp.lock_market.payload.comment.CommentRes;
-import uz.pdp.lock_market.payload.comment.CommentUpdateReq;
+import uz.pdp.lock_market.payload.comment.req.CommentAddReq;
+import uz.pdp.lock_market.payload.comment.res.CommentRes;
+import uz.pdp.lock_market.payload.comment.req.CommentUpdateReq;
 
 import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 

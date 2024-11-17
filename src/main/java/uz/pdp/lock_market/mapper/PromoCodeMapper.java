@@ -1,8 +1,8 @@
 package uz.pdp.lock_market.mapper;
 
 import uz.pdp.lock_market.entity.PromoCode;
-import uz.pdp.lock_market.payload.promo.PromoCodeUpdateReq;
-import uz.pdp.lock_market.payload.promo.PromoCodeRes;
+import uz.pdp.lock_market.payload.promo.req.PromoCodeUpdateReq;
+import uz.pdp.lock_market.payload.promo.res.PromoCodeRes;
 
 import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 

@@ -3,10 +3,10 @@ package uz.pdp.lock_market.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.lock_market.payload.promo.PromoCodeUpdateReq;
-import uz.pdp.lock_market.payload.promo.PromoCodeAddReq;
+import uz.pdp.lock_market.payload.promo.req.PromoCodeUpdateReq;
+import uz.pdp.lock_market.payload.promo.req.PromoCodeAddReq;
 import uz.pdp.lock_market.payload.base.ApiResult;
-import uz.pdp.lock_market.payload.promo.PromoCodeRes;
+import uz.pdp.lock_market.payload.promo.res.PromoCodeRes;
 import uz.pdp.lock_market.service.PromoCodeService;
 import uz.pdp.lock_market.util.BaseURI;
 

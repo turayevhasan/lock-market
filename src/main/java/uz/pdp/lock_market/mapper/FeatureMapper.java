@@ -1,7 +1,8 @@
 package uz.pdp.lock_market.mapper;
 
 import uz.pdp.lock_market.entity.Feature;
-import uz.pdp.lock_market.payload.feature.req.ReqFeature;
+import uz.pdp.lock_market.payload.feature.req.FeatureAddReq;
+import uz.pdp.lock_market.payload.feature.req.FeatureUpdateReq;
 import uz.pdp.lock_market.payload.feature.res.ResFeature;
 
 import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
@@ -26,7 +27,7 @@ public interface FeatureMapper {
                 .build();
     }
 
-    static Feature reqToEntity(ReqFeature feature) {
+    static Feature reqToEntity(FeatureAddReq feature) {
         return Feature.builder()
                 .memoryOfCards(feature.getMemoryOfCards())
                 .application(feature.getApplication())
@@ -39,23 +40,20 @@ public interface FeatureMapper {
                 .lockSize(feature.getLockSize())
                 .weight(feature.getWeight())
                 .equipment(feature.getEquipment())
-                .LookId(feature.getLockId())
                 .build();
     }
 
 
-    static void updatedAdd(Feature feature, ReqFeature reqFeature) {
-        feature.setMemoryOfCards(getIfExists(reqFeature.getMemoryOfCards(),feature.getMemoryOfCards()));
-        feature.setApplication(getIfExists(reqFeature.getApplication(),feature.getApplication()));
-        feature.setColors(getIfExists(reqFeature.getColors(),feature.getColors()));
-        feature.setMaterial(getIfExists(reqFeature.getMaterial(),feature.getMaterial()));
-        feature.setBattery(getIfExists(reqFeature.getBattery(),feature.getBattery()));
-        feature.setUnlockType(getIfExists(reqFeature.getUnlockType(),feature.getUnlockType()));
-        feature.setDoorType(getIfExists(reqFeature.getDoorType(),feature.getDoorType()));
-        feature.setLockSize(getIfExists(reqFeature.getLockSize(),feature.getLockSize()));
-        feature.setWeight(getIfExists(reqFeature.getWeight(),feature.getWeight()));
-        feature.setEquipment(getIfExists(reqFeature.getEquipment(),feature.getEquipment()));
-        feature.setLookId(getIfExists(reqFeature.getLockId(),feature.getLookId()));
-
+    static void update(Feature feature, FeatureUpdateReq req) {
+        feature.setMemoryOfCards(getIfExists(req.getMemoryOfCards(), feature.getMemoryOfCards()));
+        feature.setApplication(getIfExists(req.getApplication(), feature.getApplication()));
+        feature.setColors(getIfExists(req.getColors(), feature.getColors()));
+        feature.setMaterial(getIfExists(req.getMaterial(), feature.getMaterial()));
+        feature.setBattery(getIfExists(req.getBattery(), feature.getBattery()));
+        feature.setUnlockType(getIfExists(req.getUnlockType(), feature.getUnlockType()));
+        feature.setDoorType(getIfExists(req.getDoorType(), feature.getDoorType()));
+        feature.setLockSize(getIfExists(req.getLockSize(), feature.getLockSize()));
+        feature.setWeight(getIfExists(req.getWeight(), feature.getWeight()));
+        feature.setEquipment(getIfExists(req.getEquipment(), feature.getEquipment()));
     }
 }

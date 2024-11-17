@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload.promo;
+package uz.pdp.lock_market.payload.promo.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

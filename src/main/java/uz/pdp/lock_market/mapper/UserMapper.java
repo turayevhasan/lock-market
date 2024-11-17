@@ -1,12 +1,12 @@
 package uz.pdp.lock_market.mapper;
 
 import uz.pdp.lock_market.entity.User;
-import uz.pdp.lock_market.payload.auth.res.ResUserSimple;
+import uz.pdp.lock_market.payload.auth.res.UserRes;
 
 public interface UserMapper {
 
-    static ResUserSimple fromEntityToDto(User user) {
-        return ResUserSimple.builder()
+    static UserRes fromEntityToDto(User user) {
+        return UserRes.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .role(user.getRole().getName())

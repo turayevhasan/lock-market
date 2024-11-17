@@ -3,7 +3,7 @@ package uz.pdp.lock_market.mapper;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.lock_market.entity.Attachment;
-import uz.pdp.lock_market.payload.file.ResUploadFile;
+import uz.pdp.lock_market.payload.file.FileRes;
 
 public interface AttachmentMapper {
 
@@ -17,8 +17,8 @@ public interface AttachmentMapper {
                 .build();
     }
 
-    static ResUploadFile fromEntityToResDto(Attachment attachment) {
-        return new ResUploadFile(
+    static FileRes fromEntityToResDto(Attachment attachment) {
+        return new FileRes(
                 attachment.getId(),
                 attachment.getFilePath(),
                 attachment.getCreatedAt(),

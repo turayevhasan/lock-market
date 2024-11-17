@@ -1,28 +1,21 @@
-package uz.pdp.lock_market.payload.app;
+package uz.pdp.lock_market.payload.comment.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import uz.pdp.lock_market.util.FormatPatterns;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApplicationRes {
-    private Long id;
+public class CommentRes {
     private String name;
-    private String company;
-    private String phone;
-    private Long lockId; //todo LockRes implementation here
-    private Integer lockAmount;
-    private Boolean customLogo;
-    private Boolean helpSetup;
-    private Boolean active;
+    private String email;
+    private String text;
+    private Integer stars;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)
     private LocalDateTime createdAt;

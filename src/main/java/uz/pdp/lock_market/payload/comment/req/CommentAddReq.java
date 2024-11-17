@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload.comment;
+package uz.pdp.lock_market.payload.comment.req;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
