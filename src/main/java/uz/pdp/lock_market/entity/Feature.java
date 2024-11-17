@@ -59,4 +59,8 @@ public class Feature extends TimeLong {
 
     @Column(nullable = false)
     private String equipment;
+
+    @Column(nullable = false)
+    private Long LookId;
+
 }

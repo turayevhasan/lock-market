@@ -36,4 +36,6 @@ public class ReqFeature {
     private Double weight;
 
     private String equipment;
+
+    private Long lockId;
 }
