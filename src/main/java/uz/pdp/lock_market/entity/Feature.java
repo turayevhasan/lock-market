@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import uz.pdp.lock_market.entity.base.Battery;
+import uz.pdp.lock_market.entity.base.DoorWidth;
+import uz.pdp.lock_market.entity.base.LockSize;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.enums.DoorType;
 import uz.pdp.lock_market.enums.UnlockType;
@@ -19,6 +22,9 @@ import java.util.List;
 @Entity
 @Table(name = "feature")
 public class Feature extends TimeLong {
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private Lock lock;
+
     @Column(nullable = false)
     private Integer memoryOfCards;
 
@@ -31,8 +37,8 @@ public class Feature extends TimeLong {
     @Column(nullable = false)
     private String material;
 
-    @Column(nullable = false)
-    private String battery;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Battery battery;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,11 +48,11 @@ public class Feature extends TimeLong {
     @Enumerated(EnumType.STRING)
     private DoorType doorType;
 
-    @Column(nullable = false)
-    private String doorWidth;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private DoorWidth doorWidth;
 
-    @Column(nullable = false)
-    private String lockSize;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private LockSize lockSize;
 
     @Column(nullable = false)
     private Double weight;

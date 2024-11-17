@@ -25,7 +25,7 @@ public class AuthController {
         return ApiResult.successResponse(authService.signUp(req));
     }
 
-    @GetMapping( "/acti         vate/{email}")
+    @GetMapping( "/activate/{email}")
     public ApiResult<ResBaseMsg> verificationEmail(@PathVariable String email) {
         return ApiResult.successResponse(authService.verifyEmail(email));
     }

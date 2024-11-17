@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommentAddReq {
-    private long commentaryId;
+    private long lockId;
     @NotNull
     @Min(1)
     private Integer stars;

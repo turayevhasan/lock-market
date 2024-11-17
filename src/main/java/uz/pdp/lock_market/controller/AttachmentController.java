@@ -14,13 +14,13 @@ import uz.pdp.lock_market.util.BaseURI;
 
 import java.util.UUID;
 
-@RequestMapping(BaseURI.API1 + BaseURI.FILE)
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(BaseURI.API1 + BaseURI.FILE)
 public class AttachmentController {
     private final AttachmentService service;
 
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @PostMapping(
             value = "/upload",
             produces = MediaType.APPLICATION_JSON_VALUE,

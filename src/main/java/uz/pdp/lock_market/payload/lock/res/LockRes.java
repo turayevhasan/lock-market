@@ -20,7 +20,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class LockRes {
-
     private Long id;
 
     private String name;
@@ -34,8 +33,6 @@ public class LockRes {
     private List<String> photoPaths;
 
     private LockType lockType;
-
-    private ResFeature featureRes;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)

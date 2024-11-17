@@ -22,8 +22,7 @@ public class User extends TimeUUID {
     @ManyToOne(optional = false)
     private Role role;
 
-    @Column(name = "profile_image_path")
-    private String profileImagePath;
+    private String photoPath;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

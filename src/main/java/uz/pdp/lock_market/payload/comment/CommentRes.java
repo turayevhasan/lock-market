@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload.commentary;
+package uz.pdp.lock_market.payload.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

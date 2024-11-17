@@ -91,7 +91,6 @@ public class AuthService {
     }
 
     public TokenDto refreshToken(ReqRefreshToken req) {
-
         String accessToken = req.getAccessToken().trim();
         accessToken = getTokenWithOutBearer(accessToken);
 

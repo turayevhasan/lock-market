@@ -28,6 +28,6 @@ public class Attachment extends TimeUUID {
     private String contentType;
 
     public String getFilePath() {
-        return BaseConstants.FILE_UPLOAD_PATH + "/" + super.getId() + "." + this.extension;
+        return BaseConstants.FILE_UPLOAD_PATH + super.getId() + "." + this.extension;
     }
 }

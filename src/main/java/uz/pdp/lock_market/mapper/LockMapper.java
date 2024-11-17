@@ -17,17 +17,17 @@ public interface LockMapper {
                 .description(lock.getDescription())
                 .price(lock.getPrice())
                 .categoryId(lock.getCategory().getId())
-                .featureRes(lock.getFeature() != null ? FeatureMapper.fromEntityToDto(lock.getFeature()) : null)
                 .photoPaths(photoPaths)
                 .lockType(lock.getLockType())
+                .createdAt(lock.getCreatedAt())
+                .updatedAt(lock.getUpdatedAt())
                 .build();
     }
 
-    static void updateDetails(Lock lock, LockUpdateReq lockUpdateReq) {
-        lock.setName(getIfExists(lockUpdateReq.getName(), lock.getName()));
-        lock.setDescription(getIfExists(lockUpdateReq.getDescription(), lock.getDescription()));
-        lock.setPrice(getIfExists(lockUpdateReq.getPrice(), lock.getPrice()));
-        lock.setPhotoIds(getIfExists(lockUpdateReq.getPhotoIds(), lock.getPhotoIds()));
-        lock.setLockType(getIfExists(lockUpdateReq.getLockType(), lock.getLockType()));
+    static void updateDetails(Lock lock, LockUpdateReq req) {
+        lock.setName(getIfExists(req.getName(), lock.getName()));
+        lock.setDescription(getIfExists(req.getDescription(), lock.getDescription()));
+        lock.setPrice(getIfExists(req.getPrice(), lock.getPrice()));
+        lock.setLockType(getIfExists(req.getLockType(), lock.getLockType()));
     }
 }
