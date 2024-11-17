@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload.category;
+package uz.pdp.lock_market.payload.category.req;
 
 import lombok.Data;
 

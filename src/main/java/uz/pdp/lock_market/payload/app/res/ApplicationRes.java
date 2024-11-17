@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload.category;
+package uz.pdp.lock_market.payload.app.res;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -10,13 +10,19 @@ import uz.pdp.lock_market.util.FormatPatterns;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class CategoryRes {
+public class ApplicationRes {
     private Long id;
     private String name;
-    private String photoPath;
+    private String company;
+    private String phone;
+    private Long lockId; //todo LockRes implementation here
+    private Integer lockAmount;
+    private Boolean customLogo;
+    private Boolean helpSetup;
+    private Boolean active;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = FormatPatterns.DATE_TIME_FORMAT)
     private LocalDateTime createdAt;

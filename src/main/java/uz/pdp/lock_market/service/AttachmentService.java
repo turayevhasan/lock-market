@@ -11,7 +11,7 @@ import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
 import uz.pdp.lock_market.mapper.AttachmentMapper;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
-import uz.pdp.lock_market.payload.file.ResUploadFile;
+import uz.pdp.lock_market.payload.file.FileRes;
 import uz.pdp.lock_market.repository.AttachmentRepository;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ import static uz.pdp.lock_market.enums.ErrorTypeEnum.*;
 public class AttachmentService {
     private final AttachmentRepository attachmentRepository;
 
-    public ResUploadFile upload(MultipartFile file) {
+    public FileRes upload(MultipartFile file) {
         if (file == null || file.isEmpty())
             throw RestException.restThrow(FILE_NOT_FOUND);
 

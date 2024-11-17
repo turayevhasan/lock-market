@@ -1,21 +1,21 @@
 package uz.pdp.lock_market.payload.auth.req;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Getter
 @Setter
-public class ReqSignUp {
+@ToString
+public class SignInReq {
     @NotBlank
-    @Pattern(regexp = "^\\w*?[a-zA-Z]\\w+@[a-z\\d\\-]+(\\.[a-z\\d\\-]+)*\\.[a-z]+\\z")
+    @Email
     private String email;
 
     @NotBlank
-    @Size(min = 6, max = 20)
     private String password;
 
 }

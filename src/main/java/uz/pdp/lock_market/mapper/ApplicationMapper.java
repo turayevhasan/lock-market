@@ -2,9 +2,9 @@ package uz.pdp.lock_market.mapper;
 
 import uz.pdp.lock_market.entity.Application;
 import uz.pdp.lock_market.entity.Lock;
-import uz.pdp.lock_market.payload.app.ApplicationAddReq;
-import uz.pdp.lock_market.payload.app.ApplicationRes;
-import uz.pdp.lock_market.payload.app.ApplicationUpdateReq;
+import uz.pdp.lock_market.payload.app.req.ApplicationAddReq;
+import uz.pdp.lock_market.payload.app.res.ApplicationRes;
+import uz.pdp.lock_market.payload.app.req.ApplicationUpdateReq;
 import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 
 public interface ApplicationMapper {

@@ -22,7 +22,8 @@ import java.util.List;
 @Entity
 @Table(name = "feature")
 public class Feature extends TimeLong {
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private Lock lock;
 
     @Column(nullable = false)
@@ -59,8 +60,4 @@ public class Feature extends TimeLong {
 
     @Column(nullable = false)
     private String equipment;
-
-    @Column(nullable = false)
-    private Long LookId;
-
 }

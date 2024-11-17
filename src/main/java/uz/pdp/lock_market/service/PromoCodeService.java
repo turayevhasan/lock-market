@@ -10,9 +10,9 @@ import uz.pdp.lock_market.entity.PromoCode;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
 import uz.pdp.lock_market.mapper.PromoCodeMapper;
-import uz.pdp.lock_market.payload.promo.PromoCodeUpdateReq;
-import uz.pdp.lock_market.payload.promo.PromoCodeAddReq;
-import uz.pdp.lock_market.payload.promo.PromoCodeRes;
+import uz.pdp.lock_market.payload.promo.req.PromoCodeUpdateReq;
+import uz.pdp.lock_market.payload.promo.req.PromoCodeAddReq;
+import uz.pdp.lock_market.payload.promo.res.PromoCodeRes;
 import uz.pdp.lock_market.repository.PromoCodeRepository;
 
 import java.util.List;

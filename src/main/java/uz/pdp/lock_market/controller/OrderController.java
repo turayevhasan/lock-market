@@ -1,13 +1,12 @@
 package uz.pdp.lock_market.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.enums.OrderStatus;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
-import uz.pdp.lock_market.payload.order.OrderAddReq;
+import uz.pdp.lock_market.payload.order.req.OrderAddReq;
 import uz.pdp.lock_market.payload.base.ApiResult;
-import uz.pdp.lock_market.payload.order.OrderRes;
+import uz.pdp.lock_market.payload.order.res.OrderRes;
 import uz.pdp.lock_market.service.OrderService;
 import uz.pdp.lock_market.util.BaseURI;
 
@@ -15,7 +14,6 @@ import uz.pdp.lock_market.util.BaseURI;
 @RequiredArgsConstructor
 @RequestMapping(BaseURI.API1 + BaseURI.ORDER)
 public class OrderController {
-
     private final OrderService orderService;
 
     @PostMapping("/add")

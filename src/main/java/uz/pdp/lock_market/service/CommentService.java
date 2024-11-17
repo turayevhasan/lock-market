@@ -8,15 +8,13 @@ import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
 import uz.pdp.lock_market.mapper.CommentMapper;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
-import uz.pdp.lock_market.payload.comment.CommentAddReq;
-import uz.pdp.lock_market.payload.comment.CommentUpdateReq;
-import uz.pdp.lock_market.payload.comment.CommentRes;
+import uz.pdp.lock_market.payload.comment.req.CommentAddReq;
+import uz.pdp.lock_market.payload.comment.req.CommentUpdateReq;
+import uz.pdp.lock_market.payload.comment.res.CommentRes;
 import uz.pdp.lock_market.repository.CommentRepository;
 import uz.pdp.lock_market.repository.LockRepository;
 
 import java.util.List;
-
-import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 
 @Service
 @RequiredArgsConstructor

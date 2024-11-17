@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ResUploadFile {
+public class FileRes {
     private UUID id;
     private String filePath;
 

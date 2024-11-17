@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
-import uz.pdp.lock_market.payload.file.ResUploadFile;
+import uz.pdp.lock_market.payload.file.FileRes;
 import uz.pdp.lock_market.service.AttachmentService;
 import uz.pdp.lock_market.util.BaseURI;
 
@@ -26,7 +26,7 @@ public class AttachmentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ApiResult<ResUploadFile> upload(@RequestPart("file") MultipartFile file) {
+    public ApiResult<FileRes> upload(@RequestPart("file") MultipartFile file) {
         return ApiResult.successResponse(service.upload(file));
     }
 
