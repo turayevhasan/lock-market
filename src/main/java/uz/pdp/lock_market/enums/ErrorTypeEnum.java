@@ -39,7 +39,8 @@ public enum ErrorTypeEnum {
     APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND),
     COMMENTARY_NOT_FOUND(HttpStatus.NOT_FOUND),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND),
-    LOCK_ALREADY_EXISTS;
+    LOCK_ALREADY_EXISTS,
+    ORDER_ARCHIVED;
 
     private HttpStatus status = HttpStatus.BAD_REQUEST;
 

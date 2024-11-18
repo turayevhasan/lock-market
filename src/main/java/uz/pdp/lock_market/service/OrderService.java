@@ -49,11 +49,14 @@ public class OrderService {
         Optional<PromoCode> promoCode = promoCodeRepository.findByCode(req.getPromoCode());
         if (promoCode.isPresent() && promoCode.get().getActive()) {
             long fixedPrice = fullPrice - promoCode.get().getDiscountPrice();
-            if (fixedPrice >= 0)
+            if (fixedPrice >= 0) {
                 fullPrice = fixedPrice;
+                check.append("PromoCode discount: -").append(promoCode.get().getDiscountPrice()).append("<br>");
+            }
         }
 
         check.append("Full price: ").append(fullPrice).append("<br>");
+
         check.append("Location: ").append(req.getCity()).append(", ").append(req.getBranch()).append("<br>");
         check.append("Delivery type: ").append(req.getDeliveryType()).append("<br>");
         check.append("Payment type: ").append(req.getPaymentType()).append("<br>");
@@ -91,6 +94,10 @@ public class OrderService {
 
         if (order.getStatus().equals(status)) {
             throw RestException.restThrow(ErrorTypeEnum.ORDER_ALREADY_IN_THIS_STATUS);
+        }
+
+        if (order.getStatus().equals(OrderStatus.ARCHIVED)) {
+            throw RestException.restThrow(ErrorTypeEnum.ORDER_ARCHIVED);
         }
 
         order.setStatus(status);
