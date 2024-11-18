@@ -42,7 +42,7 @@ public class MailService {
                         }
                         .content {
                             padding: 30px;
-                            text-align: center;
+                            text-align: left;
                         }
                         .footer {
                             background-color: #f4f4f4;

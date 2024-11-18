@@ -1,6 +1,7 @@
 package uz.pdp.lock_market.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -99,9 +100,20 @@ public class LockService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdAt"));
         return lockRepository.filterLocks(categoryId, startPrice, endPrice, pageable)
                 .stream()
+                .filter(lock -> filterByColorSize(color, lock, material))
                 .map(this::entityToRes)
                 .toList();
     }
+
+    private static boolean filterByColorSize(Color color, Lock lock, String material) {
+        if (lock.getFeature() == null) {
+            return color == null && material == null;
+        }
+
+        return (material == null || StringUtils.containsIgnoreCase(lock.getFeature().getMaterial(), material)) &&
+                ((color == null) || (lock.getFeature().getColors().contains(color)));
+    }
+
 
     private LockRes entityToRes(Lock lock) {
         return LockMapper.entityToDto(lock, getPhotoPaths(lock.getPhotoIds()));
