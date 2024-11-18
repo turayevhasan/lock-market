@@ -51,7 +51,7 @@ public class DataLoader implements CommandLineRunner {
                 .password(passwordEncoder.encode("admin123"))
                 .status(UserStatus.ACTIVE)
                 .role(roleRepository.findByName(RoleEnum.ADMIN.name()).orElseThrow())
-                .photoPath("E:/PROJECT_DOWNLOAD_FILES/c4ac5743-1237-4c7d-978b-7a6ec4380413.jpg")
+                .photoPath("D:/PROJECT_DOWNLOAD_FILES/f15d5b11-498b-43bb-9c78-31f7241a7917.jpg")
                 .build();
         userRepository.save(admin);
 
@@ -60,7 +60,7 @@ public class DataLoader implements CommandLineRunner {
                 .password(passwordEncoder.encode("user123"))
                 .status(UserStatus.ACTIVE)
                 .role(roleRepository.findByName(RoleEnum.USER.name()).orElseThrow())
-                .photoPath("E:/PROJECT_DOWNLOAD_FILES/2142b4dc-4fbb-442e-8d49-b92d498043b6.jpg")
+                .photoPath("D:/PROJECT_DOWNLOAD_FILES/179b4bcb-050e-496e-8f11-07f956959232.jpg")
                 .build();
         userRepository.save(user);
     }
@@ -68,30 +68,30 @@ public class DataLoader implements CommandLineRunner {
     private void categoryLoad() {
         Category category1 = Category.builder()
                 .name("Накладные электронные замки")
-                .photoId(UUID.fromString("b6838eea-90ae-4e01-97a6-d165dc60aaca"))
+                .photoId(UUID.fromString("d5f24c96-5d11-4485-8e92-d3a344e6b7ac"))
                 .build();
 
 
         Category category2 = Category.builder()
                 .name("Врезные электроные замки")
-                .photoId(UUID.fromString("2534e0ad-ffcd-47db-baa4-8d803d10ccad"))
+                .photoId(UUID.fromString("4f9af74f-17f4-4226-873d-d00f83d938e8"))
                 .build();
 
         Category category3 = Category.builder()
                 .name("Замки для квартиры")
-                .photoId(UUID.fromString("8c5bd886-939e-4038-a6ee-795327ae2270"))
+                .photoId(UUID.fromString("59053b9b-aeb2-4f44-8914-cda1e3296a64"))
                 .build();
 
 
         Category category4 = Category.builder()
                 .name("Замки для дома")
-                .photoId(UUID.fromString("dd90e6a0-2685-4fad-ad6c-21d266e66c38"))
+                .photoId(UUID.fromString("70695eaa-a257-44ad-9478-e05d29e5c2a3"))
                 .build();
 
 
         Category category5 = Category.builder()
                 .name("Замки для отелей")
-                .photoId(UUID.fromString("220443f5-f026-4a23-963a-35bcf0a9b38a"))
+                .photoId(UUID.fromString("169fca81-58a4-42f8-b65e-9fdd8d05b5f1"))
                 .build();
 
         categoryRepository.saveAll(List.of(category1, category2, category3, category4, category5));
@@ -103,7 +103,7 @@ public class DataLoader implements CommandLineRunner {
                 .description("Golden Soft locks is the best")
                 .category(categoryRepository.findById(1L).orElseThrow())
                 .price(200_000L)
-                .photoIds(List.of(UUID.fromString("34921418-3624-46b3-af12-5c54bf389225"), UUID.fromString("3363f987-041f-4fd4-a445-a805566e2c97"), UUID.fromString("66fd4272-c601-4799-be9c-a7dd54668446"), UUID.fromString("2de5ddc4-bdf2-43cf-8fe3-69a347d56214")))
+                .photoIds(List.of(UUID.fromString("af62de0e-125d-4290-bcbd-f17d27097e40"), UUID.fromString("b409ee55-3f68-4524-b41b-4fd5b5f37ac9"), UUID.fromString("e6473697-14f9-4280-8251-bf753bd5ee48"), UUID.fromString("5d325d21-b4f5-40a3-9cb9-db45cf2e5d78")))
                 .lockType(LockType.WITH_APP)
                 .build();
 
@@ -112,7 +112,7 @@ public class DataLoader implements CommandLineRunner {
                 .description("Golden Soft locks is the best")
                 .category(categoryRepository.findById(1L).orElseThrow())
                 .price(150_000L)
-                .photoIds(List.of(UUID.fromString("a7252ead-1481-4255-99c1-d5b8e19a7478")))
+                .photoIds(List.of(UUID.fromString("fc45b644-0ed9-42e6-952b-40320759ef79")))
                 .lockType(LockType.WITHOUT_APP)
                 .build();
 
@@ -121,7 +121,7 @@ public class DataLoader implements CommandLineRunner {
                 .description("Golden Soft locks is the best")
                 .category(categoryRepository.findById(1L).orElseThrow())
                 .price(120_000L)
-                .photoIds(List.of(UUID.fromString("7dff54e6-0d32-42fb-8d05-d36b5da47ff4")))
+                .photoIds(List.of(UUID.fromString("cdb7ad5f-e56f-4d13-a6e2-d2d2d7d6daca")))
                 .lockType(LockType.WITH_APP)
                 .build();
 

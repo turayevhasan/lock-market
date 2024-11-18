@@ -53,7 +53,7 @@ public class OrderService {
                 fullPrice = fixedPrice;
         }
 
-        check = new StringBuilder("Full price: " + fullPrice + "<br>");
+        check.append("Full price: ").append(fullPrice).append("<br>");
         check.append("Location: ").append(req.getCity()).append(", ").append(req.getBranch()).append("<br>");
         check.append("Delivery type: ").append(req.getDeliveryType()).append("<br>");
         check.append("Payment type: ").append(req.getPaymentType()).append("<br>");
@@ -72,6 +72,8 @@ public class OrderService {
             lines.add(new OrderLine(line.getLockId(), line.getAmount(), order));
         }
         orderLineRepository.saveAll(lines);
+
+        System.out.println(check);
 
         return new ResBaseMsg("Successfully! We will send order confirmation to " + req.getCustomerEmail());
     }

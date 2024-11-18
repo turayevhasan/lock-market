@@ -42,4 +42,6 @@ public class Lock extends TimeLong {
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "lock")
     private Feature feature;
+
+
 }
