@@ -6,6 +6,8 @@ import java.util.UUID;
 
 @Data
 public class CategoryUpdateReq {
-    private String name;
-    private UUID photoId;
+    private String nameUz;
+    private String nameEn;
+    private String nameRu;
+    private String photoPath;
 }

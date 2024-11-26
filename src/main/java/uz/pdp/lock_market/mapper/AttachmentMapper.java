@@ -6,7 +6,6 @@ import uz.pdp.lock_market.entity.Attachment;
 import uz.pdp.lock_market.payload.file.FileRes;
 
 public interface AttachmentMapper {
-
     static Attachment fromMultipartToEntity(MultipartFile file) {
         String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
         return Attachment.builder()
@@ -19,7 +18,6 @@ public interface AttachmentMapper {
 
     static FileRes fromEntityToResDto(Attachment attachment) {
         return new FileRes(
-                attachment.getId(),
                 attachment.getFilePath(),
                 attachment.getCreatedAt(),
                 attachment.getUpdatedAt()

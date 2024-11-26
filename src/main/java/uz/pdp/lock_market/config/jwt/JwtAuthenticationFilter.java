@@ -7,14 +7,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.pdp.lock_market.config.UserPrincipal;
+import uz.pdp.lock_market.config.web.UserPrincipal;
 import uz.pdp.lock_market.util.BaseConstants;
 import uz.pdp.lock_market.util.GlobalVar;
 
@@ -56,16 +54,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
-            log.error("SET_USER_PRINCIPAL_IF_ALL_OK_METHOD_ERROR", e);
+            log.error("SET_USER_PRINCIPAL_IF_ALL_OK_METHOD_ERROR -> {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
     }
 
     public UserPrincipal getUserFromBearerToken(String token) {
-
-        token = token.trim();
-        if (token.startsWith(BaseConstants.BEARER_TOKEN)) {
+        if (token.trim().startsWith(BaseConstants.BEARER_TOKEN)) {
             token = token.substring(BaseConstants.BEARER_TOKEN.length()).trim();
 
             String userEmail = jwtTokenProvider.extractUsername(token);

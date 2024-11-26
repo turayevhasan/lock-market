@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.config;
+package uz.pdp.lock_market.config.web;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.config;
+package uz.pdp.lock_market.config.web;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

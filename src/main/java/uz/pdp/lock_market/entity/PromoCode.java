@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
-import uz.pdp.lock_market.entity.template.TimeLong;
+import uz.pdp.lock_market.entity.base.TimeLong;
 
 @Getter
 @Setter
@@ -16,6 +16,7 @@ import uz.pdp.lock_market.entity.template.TimeLong;
 public class PromoCode extends TimeLong {
     @Column(unique = true, nullable = false)
     private String code;
+
     @Column(nullable = false)
     private Long discountPrice;
 

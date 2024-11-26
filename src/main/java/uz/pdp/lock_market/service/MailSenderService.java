@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.email;
+package uz.pdp.lock_market.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -7,12 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-import uz.pdp.lock_market.email.payload.SendEmailDto;
+import uz.pdp.lock_market.payload.mail.SendEmailDto;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@EnableAsync
 public class MailSenderService {
     private final JavaMailSender javaMailSender;
 
@@ -22,7 +24,7 @@ public class MailSenderService {
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
-            mimeMessageHelper.setFrom("lock-market.uz");
+            mimeMessageHelper.setFrom("food-recipe.uz");
             mimeMessageHelper.setTo(emailDto.getTo());
             mimeMessageHelper.setSubject(emailDto.getSubject());
             mimeMessageHelper.setText(emailDto.getBody(), emailDto.isHtml());

@@ -9,5 +9,10 @@ import lombok.*;
 @Builder
 public class OrderLineRes {
     private Long lockId;
+
+    private String lockName;
+
+    private long lockPrice;
+
     private int amount;
 }

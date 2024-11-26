@@ -4,15 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import uz.pdp.lock_market.entity.*;
-import uz.pdp.lock_market.entity.base.Battery;
-import uz.pdp.lock_market.entity.base.DoorWidth;
-import uz.pdp.lock_market.entity.base.LockSize;
-import uz.pdp.lock_market.enums.*;
 import uz.pdp.lock_market.repository.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +18,9 @@ public class DataLoader implements CommandLineRunner {
     private final ApplicationRepository applicationRepository;
     private final LockRepository lockRepository;
     private final FeatureRepository featureRepository;
+    private final BatteryRepository batteryRepository;
+    private final LockSizeRepository lockSizeRepository;
+    private final DoorWidthRepository doorWidthRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -40,6 +35,7 @@ public class DataLoader implements CommandLineRunner {
          */
     }
 
+    /*
     private void roleLoad() {
         roleRepository.save(new Role("ADMIN"));
         roleRepository.save(new Role("USER"));
@@ -51,7 +47,7 @@ public class DataLoader implements CommandLineRunner {
                 .password(passwordEncoder.encode("admin123"))
                 .status(UserStatus.ACTIVE)
                 .role(roleRepository.findByName(RoleEnum.ADMIN.name()).orElseThrow())
-                .photoPath("D:/PROJECT_DOWNLOAD_FILES/f15d5b11-498b-43bb-9c78-31f7241a7917.jpg")
+                .photoId(UUID.fromString("f15d5b11-498b-43bb-9c78-31f7241a7917"))
                 .build();
         userRepository.save(admin);
 
@@ -60,7 +56,7 @@ public class DataLoader implements CommandLineRunner {
                 .password(passwordEncoder.encode("user123"))
                 .status(UserStatus.ACTIVE)
                 .role(roleRepository.findByName(RoleEnum.USER.name()).orElseThrow())
-                .photoPath("D:/PROJECT_DOWNLOAD_FILES/179b4bcb-050e-496e-8f11-07f956959232.jpg")
+                .photoId(UUID.fromString("179b4bcb-050e-496e-8f11-07f956959232"))
                 .build();
         userRepository.save(user);
     }
@@ -172,18 +168,18 @@ public class DataLoader implements CommandLineRunner {
         applicationRepository.saveAll(List.of(app1, app2, app3));
     }
 
-    private void featureLoad(){
+    private void featureLoad() {
         Feature feature1 = Feature.builder()
                 .lock(lockRepository.findById(1L).orElseThrow())
                 .memoryOfCards(100)
                 .application(true)
                 .colors(List.of(Color.CHROME, Color.BLACK))
                 .material("Material1")
-                .battery(new Battery(4, 5))
+                .battery(batteryRepository.save(new Battery(2.2, 3.4)))
                 .unlockType(UnlockType.PIN_CODE)
                 .doorType(DoorType.WOODEN)
-                .doorWidth(new DoorWidth(35.8, 20.6))
-                .lockSize(new LockSize(10, 20, 30))
+                .doorWidth(doorWidthRepository.save(new DoorWidth(18.3, 28.2)))
+                .lockSize(lockSizeRepository.save(new LockSize(18.0, 16.2, 21.4)))
                 .weight(10.0)
                 .equipment("Equipment1")
                 .build();
@@ -194,11 +190,11 @@ public class DataLoader implements CommandLineRunner {
                 .application(true)
                 .colors(List.of(Color.CHROME, Color.DEFAULT))
                 .material("Material2")
-                .battery(new Battery(3, 6))
+                .battery(batteryRepository.save(new Battery(2.0, 3.0)))
                 .unlockType(UnlockType.KEY)
                 .doorType(DoorType.METAL)
-                .doorWidth(new DoorWidth(34.6, 22.4))
-                .lockSize(new LockSize(12, 22, 33))
+                .doorWidth(doorWidthRepository.save(new DoorWidth(12.4, 22.2)))
+                .lockSize(lockSizeRepository.save(new LockSize(22.0, 20.2, 24.5)))
                 .weight(12.0)
                 .equipment("Equipment2")
                 .build();
@@ -209,17 +205,16 @@ public class DataLoader implements CommandLineRunner {
                 .application(true)
                 .colors(List.of(Color.BLACK, Color.DEFAULT))
                 .material("Material3")
-                .battery(new Battery(4, 4))
+                .battery(batteryRepository.save(new Battery(4.0, 4.0)))
                 .unlockType(UnlockType.BRACELET)
                 .doorType(DoorType.WOODEN)
-                .doorWidth(new DoorWidth(32.6, 26.6))
-                .lockSize(new LockSize(14, 20, 32))
+                .doorWidth(doorWidthRepository.save(new DoorWidth(30.6, 27.6)))
+                .lockSize(lockSizeRepository.save(new LockSize(19.1, 23.4, 20.4)))
                 .weight(14.0)
                 .equipment("Equipment3")
                 .build();
 
         featureRepository.saveAll(List.of(feature1, feature2, feature3));
     }
-
-
+     */
 }

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.payload.file.FileRes;
+import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.service.AttachmentService;
 import uz.pdp.lock_market.util.BaseURI;
 
@@ -20,7 +21,7 @@ import java.util.UUID;
 public class AttachmentController {
     private final AttachmentService service;
 
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(
             value = "/upload",
             produces = MediaType.APPLICATION_JSON_VALUE,
@@ -38,9 +39,9 @@ public class AttachmentController {
         return service.download(id, view);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @DeleteMapping( "/delete/{id}")
-    public ApiResult<ResBaseMsg> deleteFile(@PathVariable UUID id){
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    public ApiResult<ResBaseMsg> deleteFile(@PathVariable UUID id) {
         return ApiResult.successResponse(service.delete(id));
     }
 

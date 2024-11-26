@@ -11,16 +11,25 @@ import java.util.UUID;
 @Getter
 @Setter
 public class LockUpdateReq {
-    private String name;
+    private String nameUz;
+    private String nameRu;
+    private String nameEn;
 
-    private String description;
+    private String descriptionUz;
+    private String descriptionRu;
+    private String descriptionEn;
 
     @Min(1)
     private Long price;
 
+    private Boolean hasGift;
+
+    @Min(1)
+    private Long newPrice;
+
     private Long categoryId;
 
-    private List<UUID> photoIds;
+    private List<String> photos;
 
     private LockType lockType;
 }

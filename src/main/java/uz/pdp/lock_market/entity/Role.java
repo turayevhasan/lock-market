@@ -3,7 +3,7 @@ package uz.pdp.lock_market.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
-import uz.pdp.lock_market.entity.template.TimeLong;
+import uz.pdp.lock_market.entity.base.TimeLong;
 
 
 @Getter

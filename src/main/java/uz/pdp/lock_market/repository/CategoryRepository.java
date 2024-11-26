@@ -7,18 +7,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uz.pdp.lock_market.entity.Category;
-import uz.pdp.lock_market.entity.PromoCode;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    boolean existsByName(String name);
+    boolean existsByNameEn(String nameEn);
+    boolean existsByNameUz(String nameUz);
+    boolean existsByNameRu(String nameRu);
 
-    Optional<Category> findByName(String name);
-
-    @Query("select c from Category c where (:name is null or lower(c.name) like lower(concat('%', :name, '%'))) ")
+    @Query("""
+            select c from Category c where (:name is null or:name = '' or
+            lower(c.nameUz) like lower(concat('%', :name, '%')) or
+            lower(c.nameEn) like lower(concat('%', :name, '%')) or
+            lower(c.nameRu) like lower(concat('%', :name, '%')))
+            """)
     Page<Category> findAllByFilters(
             @Param("name") String name,
             Pageable pageable

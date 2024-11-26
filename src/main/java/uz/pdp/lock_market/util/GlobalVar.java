@@ -1,15 +1,14 @@
 package uz.pdp.lock_market.util;
 
-import uz.pdp.lock_market.config.UserPrincipal;
+import uz.pdp.lock_market.config.web.UserPrincipal;
 import uz.pdp.lock_market.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class GlobalVar {
-
     private final static ThreadLocal<LocalDateTime> START_TIME = ThreadLocal.withInitial(LocalDateTime::now);
-     private final static ThreadLocal<String> H_REQUEST_ID = ThreadLocal.withInitial(String::new);
+    private final static ThreadLocal<String> H_REQUEST_ID = ThreadLocal.withInitial(String::new);
     private final static ThreadLocal<UUID> USER_UUID = ThreadLocal.withInitial(UUID::randomUUID);
     private final static ThreadLocal<User> USER = ThreadLocal.withInitial(() -> null);
     private final static ThreadLocal<UserPrincipal> AUTH_USER = ThreadLocal.withInitial(() -> null);

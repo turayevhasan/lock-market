@@ -2,6 +2,7 @@ package uz.pdp.lock_market.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.payload.app.req.ApplicationAddReq;
 import uz.pdp.lock_market.payload.app.res.ApplicationRes;
@@ -12,6 +13,7 @@ import uz.pdp.lock_market.service.ApplicationService;
 import uz.pdp.lock_market.util.BaseURI;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,12 +22,16 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @PostMapping("/add")
-    public ApiResult<ResBaseMsg> addApp(@RequestBody @Valid ApplicationAddReq req) {
-        return ApiResult.successResponse(applicationService.add(req));
+    public ApiResult<ResBaseMsg> addApp(
+            @RequestHeader(value = "Accept-Language", required = false) String lang,
+            @RequestBody @Valid ApplicationAddReq req) {
+        return ApiResult.successResponse(applicationService.add(lang, req));
     }
 
     @PutMapping("/update/{id}")
-    public ApiResult<ApplicationRes> updateApp(@PathVariable("id") long id, @RequestBody ApplicationUpdateReq req) {
+    public ApiResult<ApplicationRes> updateApp(
+            @PathVariable("id") long id,
+            @RequestBody ApplicationUpdateReq req) {
         return ApiResult.successResponse(applicationService.update(id, req));
     }
 
@@ -34,6 +40,7 @@ public class ApplicationController {
         return ApiResult.successResponse(applicationService.getOne(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get-all")
     public ApiResult<List<ApplicationRes>> getAllApp(
             @RequestParam(defaultValue = "0") int page,
