@@ -2,6 +2,7 @@ package uz.pdp.lock_market.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.payload.promo.req.PromoCodeUpdateReq;
 import uz.pdp.lock_market.payload.promo.req.PromoCodeAddReq;
@@ -18,21 +19,25 @@ import java.util.List;
 public class PromoCodeController {
     private final PromoCodeService promoCodeService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public ApiResult<PromoCodeRes> addPromoCode(@RequestBody PromoCodeAddReq req) {
+    public ApiResult<PromoCodeRes> addPromoCode(@RequestBody @Valid PromoCodeAddReq req) {
         return ApiResult.successResponse(promoCodeService.add(req));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ApiResult<PromoCodeRes> updatePromoCode(@PathVariable("id") long id, @RequestBody @Valid PromoCodeUpdateReq req) {
         return ApiResult.successResponse(promoCodeService.update(id, req));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get/{id}")
     public ApiResult<PromoCodeRes> getPromoCode(@PathVariable("id") long id) {
         return ApiResult.successResponse(promoCodeService.getOne(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get-all")
     public ApiResult<List<PromoCodeRes>> getAllPromoCode(
             @RequestParam(defaultValue = "0") int page,

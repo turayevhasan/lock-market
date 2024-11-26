@@ -1,6 +1,8 @@
 package uz.pdp.lock_market.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import uz.pdp.lock_market.repository.LockRepository;
 import uz.pdp.lock_market.util.FormatPatterns;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 @Service
@@ -26,8 +29,9 @@ import java.util.regex.Pattern;
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final LockRepository lockRepository;
+    private final MessageSource messageSource;
 
-    public ResBaseMsg add(ApplicationAddReq req) {
+    public ResBaseMsg add(String lang, ApplicationAddReq req) {
         Pattern pattern = Pattern.compile(FormatPatterns.MOBILE_PHONE_NUMBER);
         if (!pattern.matcher(req.getPhone()).matches()) {
             throw RestException.restThrow(ErrorTypeEnum.PHONE_NUMBER_NOT_VALID);
@@ -38,7 +42,7 @@ public class ApplicationService {
         Application application = ApplicationMapper.reqToEntity(req, lock);
         applicationRepository.save(application);  //saving
 
-        return new ResBaseMsg("Successfully received your application. We will contact you!");
+        return new ResBaseMsg(messageSource.getMessage("app.received", null, Locale.of(lang)));
     }
 
     public ApplicationRes update(long id, ApplicationUpdateReq req) {
@@ -63,8 +67,8 @@ public class ApplicationService {
         return ApplicationMapper.entityToDto(application);
     }
 
-    public List<ApplicationRes> findAll(int page, int size, Boolean active){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdAt"));
+    public List<ApplicationRes> findAll(int page, int size, Boolean active) {
+        Pageable pageable = PageRequest.of(page, size);
         return applicationRepository.findAllByFilters(active, pageable).stream()
                 .map(ApplicationMapper::entityToDto)
                 .toList();

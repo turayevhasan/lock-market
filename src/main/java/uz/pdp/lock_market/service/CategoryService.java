@@ -1,6 +1,7 @@
 package uz.pdp.lock_market.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,11 +13,12 @@ import uz.pdp.lock_market.payload.category.req.CategoryUpdateReq;
 import uz.pdp.lock_market.payload.category.req.CategoryAddReq;
 import uz.pdp.lock_market.mapper.CategoryMapper;
 import uz.pdp.lock_market.payload.category.res.CategoryRes;
-import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.repository.CategoryRepository;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
+import java.util.Locale;
 
 import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 
@@ -24,61 +26,74 @@ import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final AttachmentRepository attachmentRepository;
 
-    public CategoryRes add(CategoryAddReq req) {
-        if (categoryRepository.existsByName(req.getName()))
-            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_ALREADY_EXISTS);
+    public CategoryRes add(String lang, CategoryAddReq req) {
+        if (categoryRepository.existsByNameUz(req.getNameUz()))
+            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NAME_UZ_ALREADY_EXISTS);
 
-        String photoPath = getPhotoPath(req.getPhotoId());
+        if (categoryRepository.existsByNameEn(req.getNameEn()))
+            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NAME_EN_ALREADY_EXISTS);
 
-        Category category = new Category(req.getName(), req.getPhotoId());
+        if (categoryRepository.existsByNameRu(req.getNameRu()))
+            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NAME_RU_ALREADY_EXISTS);
+
+        if (!Files.exists(Path.of(req.getPhotoPath()))) {
+            throw RestException.restThrow(ErrorTypeEnum.FILE_NOT_FOUND);
+        }
+
+        Category category = Category.builder()
+                .nameUz(req.getNameUz())
+                .nameEn(req.getNameEn())
+                .nameRu(req.getNameRu())
+                .photoPath(req.getPhotoPath())
+                .build();
+
         categoryRepository.save(category);  //saving
 
-        return CategoryMapper.entityToDto(category, photoPath);
+        return CategoryMapper.entityToDto(category, lang);
     }
 
-
-    public CategoryRes update(long id, CategoryUpdateReq req) {
+    public CategoryRes update(String lang, long id, CategoryUpdateReq req) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(RestException.thew(ErrorTypeEnum.CATEGORY_NOT_FOUND));
 
-        if (!category.getName().equals(req.getName()) && categoryRepository.existsByName(req.getName()))
-            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_ALREADY_EXISTS);
+        if (!category.getNameUz().equals(req.getNameUz()) && categoryRepository.existsByNameUz(req.getNameUz()))
+            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NAME_UZ_ALREADY_EXISTS);
 
-        category.setName(getIfExists(req.getName(), category.getName()));
+        if (!category.getNameEn().equals(req.getNameEn()) && categoryRepository.existsByNameEn(req.getNameEn()))
+            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NAME_EN_ALREADY_EXISTS);
 
-        if (req.getPhotoId() != null && attachmentRepository.existsById(req.getPhotoId())) {
-            category.setPhotoId(req.getPhotoId());
+        if (!category.getNameRu().equals(req.getNameRu()) && categoryRepository.existsByNameRu(req.getNameRu()))
+            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NAME_RU_ALREADY_EXISTS);
+
+        category.setNameUz(getIfExists(req.getNameUz(), category.getNameUz()));
+        category.setNameEn(getIfExists(req.getNameEn(), category.getNameEn()));
+        category.setNameRu(getIfExists(req.getNameRu(), category.getNameRu()));
+
+        if (req.getPhotoPath() != null) {
+            if (!Files.exists(Path.of(req.getPhotoPath()))) {
+                throw RestException.restThrow(ErrorTypeEnum.FILE_NOT_FOUND);
+            }
+            category.setPhotoPath(req.getPhotoPath());
         }
         categoryRepository.save(category); //updating
 
-        return CategoryMapper.entityToDto(category, getPhotoPath(category.getPhotoId()));
+        return CategoryMapper.entityToDto(category, lang);
     }
 
-    public CategoryRes getOne(long id) {
+    public CategoryRes getOne(String lang, long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(RestException.thew(ErrorTypeEnum.CATEGORY_NOT_FOUND));
 
-        return CategoryMapper.entityToDto(category, getPhotoPath(category.getPhotoId()));
+        return CategoryMapper.entityToDto(category, lang);
     }
 
-    public List<CategoryRes> getAll(int page, int size, String name) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdAt"));
+    public List<CategoryRes> getAll(String lang, int page, int size, String name) {
+        Pageable pageable = PageRequest.of(page, size);
 
         return categoryRepository.findAllByFilters(name, pageable)
                 .stream()
-                .map(this::mapToDto)
+                .map(category -> CategoryMapper.entityToDto(category, lang))
                 .toList();
-    }
-
-    private CategoryRes mapToDto(Category category) {
-        return CategoryMapper.entityToDto(category, getPhotoPath(category.getPhotoId()));
-    }
-
-    private String getPhotoPath(UUID photoId) {
-        return attachmentRepository.findById(photoId)
-                .orElseThrow(RestException.thew(ErrorTypeEnum.ATTACHMENT_NOT_FOUND))
-                .getFilePath();
     }
 }

@@ -1,28 +1,27 @@
 package uz.pdp.lock_market.service;
 
-import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
-import uz.pdp.lock_market.entity.Lock;
-import uz.pdp.lock_market.entity.Order;
-import uz.pdp.lock_market.entity.OrderLine;
-import uz.pdp.lock_market.entity.PromoCode;
+import uz.pdp.lock_market.entity.*;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.enums.OrderStatus;
 import uz.pdp.lock_market.exceptions.RestException;
 import uz.pdp.lock_market.mapper.OrderMapper;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
+import uz.pdp.lock_market.payload.order.req.CustomerDto;
 import uz.pdp.lock_market.payload.order.req.OrderAddReq;
+import uz.pdp.lock_market.payload.order.req.OrderDetailDto;
 import uz.pdp.lock_market.payload.order.req.OrderLineReq;
 import uz.pdp.lock_market.payload.order.res.OrderRes;
-import uz.pdp.lock_market.repository.LockRepository;
-import uz.pdp.lock_market.repository.OrderLineRepository;
-import uz.pdp.lock_market.repository.OrderRepository;
-import uz.pdp.lock_market.repository.PromoCodeRepository;
+import uz.pdp.lock_market.repository.*;
+import uz.pdp.lock_market.util.GlobalVar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -33,62 +32,110 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderLineRepository orderLineRepository;
     private final PromoCodeRepository promoCodeRepository;
+    private final MessageSource messageSource;
+    private final OrderDetailRepository orderDetailRepository;
 
-    public ResBaseMsg addOrder(OrderAddReq req) {
+    @Transactional
+    public ResBaseMsg addOrder(String lang, OrderAddReq req) {
         long fullPrice = 0;
-        StringBuilder check = new StringBuilder("<b>Locks: <b><br>");
 
-        for (OrderLineReq line : req.getOrderLines()) {
-            Lock lock = lockRepository.findById(line.getLockId())
+        StringBuilder checkUz = new StringBuilder("<p><b>Qulflar: </b><br>");
+        StringBuilder checkRu = new StringBuilder("<p><b>Замки: </b><br>");
+        StringBuilder checkEn = new StringBuilder("<p><b>Locks: </b><br>");
+
+        for (OrderLineReq lineReq : req.getOrderLines()) {
+            Lock lock = lockRepository.findById(lineReq.getLockId())
                     .orElseThrow(RestException.thew(ErrorTypeEnum.LOCK_NOT_FOUND));
+            fullPrice += lock.getNewPrice() * lineReq.getAmount();
 
-            fullPrice += lock.getPrice() * line.getAmount();
-            check.append(lock.getName()).append(" * ").append(line.getAmount()).append(" = ").append(lock.getPrice() * line.getAmount()).append("<br>");
+            checkUz.append(lock.getNameUz()).append(" * ").append(lineReq.getAmount()).append(" = ").append(lock.getNewPrice() * lineReq.getAmount()).append("<br>");
+            checkRu.append(lock.getNameRu()).append(" * ").append(lineReq.getAmount()).append(" = ").append(lock.getNewPrice() * lineReq.getAmount()).append("<br>");
+            checkEn.append(lock.getNameEn()).append(" * ").append(lineReq.getAmount()).append(" = ").append(lock.getNewPrice() * lineReq.getAmount()).append("<br>");
         }
 
-        Optional<PromoCode> promoCode = promoCodeRepository.findByCode(req.getPromoCode());
-        if (promoCode.isPresent() && promoCode.get().getActive()) {
-            long fixedPrice = fullPrice - promoCode.get().getDiscountPrice();
-            if (fixedPrice >= 0) {
-                fullPrice = fixedPrice;
-                check.append("PromoCode discount: -").append(promoCode.get().getDiscountPrice()).append("<br>");
+
+        PromoCode promoCode = null;
+        if (req.getPromoCode() != null) {
+            promoCode = promoCodeRepository.findByCode(req.getPromoCode())
+                    .orElseThrow(RestException.thew(ErrorTypeEnum.PROMOCODE_IS_NOT_VALID));
+
+            if (promoCode.getActive()) {
+                long fixedPrice = fullPrice - promoCode.getDiscountPrice();
+                if (fixedPrice >= 0) {
+                    fullPrice = fixedPrice;
+                    checkUz.append("<b>Promokod chegirmasi:</b> -").append(promoCode.getDiscountPrice()).append("<br>");
+                    checkRu.append("<b>Промокод cкидка:</b> -").append(promoCode.getDiscountPrice()).append("<br>");
+                    checkEn.append("<b>Promocode discount:</b> -").append(promoCode.getDiscountPrice()).append("<br>");
+                }
             }
         }
+        checkEn.append("<b>Must be paid:</b> ").append(fullPrice).append("<br>");
+        checkUz.append("<b>To'lanishi kerak:</b> ").append(fullPrice).append("<br>");
+        checkRu.append("<b>Должно быть оплачено:</b> ").append(fullPrice).append("<br>");
 
-        check.append("Full price: ").append(fullPrice).append("<br>");
-
-        check.append("Location: ").append(req.getCity()).append(", ").append(req.getBranch()).append("<br>");
-        check.append("Delivery type: ").append(req.getDeliveryType()).append("<br>");
-        check.append("Payment type: ").append(req.getPaymentType()).append("<br>");
-
-        try {
-            mailService.sendMessage(req.getCustomerEmail(), check.toString(), "Your order details", "Order Confirmed"); //send order confirmation
-        } catch (MessagingException e) {
-            throw RestException.restThrow(ErrorTypeEnum.EMAIL_NOT_VALID);
+        if (GlobalVar.getUser() == null) {
+            throw RestException.restThrow(ErrorTypeEnum.USER_NOT_FOUND_OR_DISABLED);
         }
 
-        Order order = OrderMapper.reqToEntity(req, fullPrice);
-        orderRepository.save(order);
+        OrderDetailDto detailDto = req.getOrderDetailDto();
+        CustomerDto customer = req.getCustomerDto();
+
+        String paymentTypeUz = messageSource.getMessage(detailDto.getPaymentType().getKey(), null, Locale.of("uz"));
+        checkUz.append("<b>Manzil:</b> ").append(detailDto.getCity()).append(", ").append(detailDto.getBranch()).append("<br>");
+        checkUz.append("<b>To'lov turi:</b> ").append(paymentTypeUz).append("<br></p>");
+
+        String paymentTypeRu = messageSource.getMessage(detailDto.getPaymentType().getKey(), null, Locale.of("ru"));
+        checkRu.append("<b>Расположение:</b> ").append(detailDto.getCity()).append(", ").append(detailDto.getBranch()).append("<br>");
+        checkRu.append("<b>Тип платежа:</b> ").append(paymentTypeRu).append("<br></p>");
+
+        String paymentTypeEn = messageSource.getMessage(detailDto.getPaymentType().getKey(), null, Locale.of("en"));
+        checkEn.append("<b>Location:</b> ").append(detailDto.getCity()).append(", ").append(detailDto.getBranch()).append("<br>");
+        checkEn.append("<b>Payment type:</b> ").append(paymentTypeEn).append("<br></p>");
+
+        OrderDetail orderDetail = OrderDetail.builder()
+                .name(customer.getName())
+                .surname(customer.getSurname())
+                .email(customer.getEmail())
+                .phone(customer.getPhone())
+                .city(detailDto.getCity())
+                .branch(detailDto.getBranch())
+                .paymentType(detailDto.getPaymentType())
+                .comment(detailDto.getComment())
+                .installSoft(detailDto.getInstallSoft())
+                .setupLock(detailDto.getSetupLock())
+                .build();
+
+        orderDetailRepository.save(orderDetail);//saved order detail
+
+        Order order = Order.builder()
+                .user(GlobalVar.getUser())
+                .fullPrice(fullPrice)
+                .promoCode(promoCode)
+                .orderDetail(orderDetail)
+                .checkUz(checkUz.toString())
+                .checkRu(checkRu.toString())
+                .checkEn(checkEn.toString())
+                .lang(lang)
+                .build();
+        orderRepository.save(order); //order saved
 
         List<OrderLine> lines = new ArrayList<>();
         for (OrderLineReq line : req.getOrderLines()) {
             lines.add(new OrderLine(line.getLockId(), line.getAmount(), order));
         }
-        orderLineRepository.saveAll(lines);
+        orderLineRepository.saveAll(lines); //order lines saved
 
-        System.out.println(check);
-
-        return new ResBaseMsg("Successfully! We will send order confirmation to " + req.getCustomerEmail());
+        return new ResBaseMsg(messageSource.getMessage("order.received", null, Locale.of(lang)));
     }
 
-    public OrderRes getOne(long id) {
+    public OrderRes getOne(String lang, long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(RestException.thew(ErrorTypeEnum.ORDER_NOT_FOUND));
 
-        return OrderMapper.entityToDto(order);
+        return OrderMapper.entityToDto(order, lang);
     }
 
-    public OrderRes updateStatus(long id, OrderStatus status) {
+    public OrderRes updateStatus(String lang, long id, OrderStatus status) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(RestException.thew(ErrorTypeEnum.ORDER_NOT_FOUND));
 
@@ -103,35 +150,49 @@ public class OrderService {
         order.setStatus(status);
         orderRepository.save(order); //updated
 
-        try {
-            switch (order.getStatus()) {
-                case OrderStatus.DELIVERED -> {
-                    String body = "Please go to this address to receive your order: " + order.getCity() + ", " + order.getBranch();
-                    mailService.sendMessage(order.getCustomerEmail(), body, "Successfully delivered your order!", "Order Delivered");
 
-                    order.setStatus(OrderStatus.ARCHIVED);
-                    orderRepository.save(order);
-                }
-                case OrderStatus.CANCELLED -> {
-                    String body = "Your order has ben cancelled due to some problems";
-                    mailService.sendMessage(order.getCustomerEmail(), body, "Your order cancelled", "Order Cancelled");
+        switch (order.getStatus()) {
+            case OrderStatus.CONFIRMED -> {
+                switch (order.getLang()) {
+                    case "uz" -> sendMessage(order, order.getCheckUz(), "order.details", "order.confirmed");
+                    case "ru" -> sendMessage(order, order.getCheckRu(), "order.details", "order.confirmed");
+                    default -> sendMessage(order, order.getCheckEn(), "order.details", "order.confirmed");
                 }
             }
-        } catch (MessagingException e) {
-            throw RestException.restThrow(ErrorTypeEnum.EMAIL_NOT_VALID);
+            case OrderStatus.DELIVERED -> {
+                String body = "<p>" + messageSource.getMessage("delivered.msg", null, Locale.of(order.getLang())) + order.getOrderDetail().getCity() + ", " + order.getOrderDetail().getBranch() + "</p>";
+                sendMessage(order, body, "delivered.title", "delivered.success");
+            }
+            case OrderStatus.PAID -> {
+                String body = messageSource.getMessage("paid.msg", null, Locale.of(order.getLang()));
+                sendMessage(order, body, "paid.title", "paid.subject");
+            }
+            case OrderStatus.CANCELLED -> {
+                String body = "<p>" + messageSource.getMessage("cancelled.msg", null, Locale.of(order.getLang())) + "</p>";
+                sendMessage(order, body, "cancelled.title", "cancelled.subject");
+            }
         }
-
-        return OrderMapper.entityToDto(order);
+        return OrderMapper.entityToDto(order, lang);
     }
 
-
-    public ResBaseMsg delete(long id) {
+    public ResBaseMsg delete(String lang, long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(RestException.thew(ErrorTypeEnum.ORDER_NOT_FOUND));
 
-        orderLineRepository.deleteAllByOrderId(order.getId());
-        orderRepository.delete(order);
+        order.setDeleted(true);
+        orderRepository.save(order);//saved
 
-        return new ResBaseMsg("Order successfully deleted!");
+        order.getOrderLines().forEach(orderline -> orderline.setDeleted(true));
+        orderLineRepository.saveAll(order.getOrderLines()); //saved
+
+        return new ResBaseMsg(messageSource.getMessage("order.deleted", null, Locale.of(lang)));
+    }
+
+    private void sendMessage(Order order, String body, String titleKey, String subjectKey) {
+        mailService.sendMessage(
+                order.getUser().getEmail(), body,
+                messageSource.getMessage(titleKey, null, Locale.of(order.getLang())),
+                messageSource.getMessage(subjectKey, null, Locale.of(order.getLang()))
+        );
     }
 }

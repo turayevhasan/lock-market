@@ -5,61 +5,75 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import uz.pdp.lock_market.entity.Attachment;
 import uz.pdp.lock_market.entity.Category;
 import uz.pdp.lock_market.entity.Lock;
-import uz.pdp.lock_market.entity.base.LockSize;
+import uz.pdp.lock_market.entity.LockSize;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
-import uz.pdp.lock_market.mapper.FeatureMapper;
 import uz.pdp.lock_market.mapper.LockMapper;
 import uz.pdp.lock_market.payload.lock.req.LockAddReq;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
 import uz.pdp.lock_market.payload.lock.res.LockRes;
 import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.repository.CategoryRepository;
-import uz.pdp.lock_market.repository.FeatureRepository;
 import uz.pdp.lock_market.repository.LockRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
+import java.util.Locale;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class LockService {
     private final LockRepository lockRepository;
     private final CategoryRepository categoryRepository;
-    private final AttachmentRepository attachmentRepository;
 
-    public LockRes add(LockAddReq req) {
-        if (lockRepository.existsByName(req.getName())) {
-            throw RestException.restThrow(ErrorTypeEnum.LOCK_ALREADY_EXISTS);
+    public LockRes add(String lang, LockAddReq req) {
+        if (lockRepository.existsByNameUz(req.getNameUz())) {
+            throw RestException.restThrow(ErrorTypeEnum.LOCK_NAME_UZ_ALREADY_EXISTS);
+        }
+        if (lockRepository.existsByNameEn(req.getNameEn())) {
+            throw RestException.restThrow(ErrorTypeEnum.LOCK_NAME_EN_ALREADY_EXISTS);
+        }
+
+        if (lockRepository.existsByNameRu(req.getNameRu())) {
+            throw RestException.restThrow(ErrorTypeEnum.LOCK_NAME_RU_ALREADY_EXISTS);
         }
 
         Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(RestException.thew(ErrorTypeEnum.CATEGORY_NOT_FOUND));
 
-        List<String> photos = getPhotoPaths(req.getPhotoIds());
+        for (String photo : req.getPhotos()) {
+            if (!Files.exists(Path.of(photo)))
+                throw RestException.restThrow(ErrorTypeEnum.FILE_NOT_FOUND);
+        }
 
         Lock lock = Lock.builder()
-                .name(req.getName())
-                .description(req.getDescription())
+                .nameUz(req.getNameUz())
+                .nameRu(req.getNameRu())
+                .nameEn(req.getNameEn())
+                .descriptionUz(req.getDescriptionUz())
+                .descriptionRu(req.getDescriptionRu())
+                .descriptionEn(req.getDescriptionEn())
                 .price(req.getPrice())
+                .newPrice(req.getNewPrice())
                 .category(category)
-                .photoIds(req.getPhotoIds())
+                .photos(req.getPhotos())
+                .hasGift(req.getHasGift())
                 .lockType(req.getLockType())
                 .build();
 
         lockRepository.save(lock); //saving
 
-        return LockMapper.entityToDto(lock, photos);
+        return LockMapper.entityToDto(lock, lang);
     }
 
-    public LockRes update(Long lockId, LockUpdateReq req) {
+    public LockRes update(String lang, Long lockId, LockUpdateReq req) {
         Lock lock = lockRepository.findById(lockId)
                 .orElseThrow(() -> RestException.restThrow(ErrorTypeEnum.LOCK_NOT_FOUND));
 
@@ -72,64 +86,46 @@ public class LockService {
         }
 
         //updating lock photos
-        List<String> photos = Collections.emptyList();
-        if (!req.getPhotoIds().isEmpty()) {
-            photos = getPhotoPaths(lock.getPhotoIds());
-            lock.setPhotoIds(req.getPhotoIds()); //updated
+        if (!req.getPhotos().isEmpty()) {
+            for (String photo : req.getPhotos()) {
+                if (!Files.exists(Path.of(photo)))
+                    throw RestException.restThrow(ErrorTypeEnum.FILE_NOT_FOUND);
+            }
+            lock.setPhotos(req.getPhotos());
         }
 
         LockMapper.updateDetails(lock, req);
         lockRepository.save(lock); //saving
 
-        return LockMapper.entityToDto(lock, photos);
+        return LockMapper.entityToDto(lock, lang);
     }
 
-    public LockRes get(Long lockId) {
+    public LockRes get(String lang, Long lockId) {
         Lock lock = lockRepository.findById(lockId)
                 .orElseThrow(() -> RestException.restThrow(ErrorTypeEnum.LOCK_NOT_FOUND));
 
-        List<String> photos = getPhotoPaths(lock.getPhotoIds());
-
-        return LockMapper.entityToDto(lock, photos);
+        return LockMapper.entityToDto(lock, lang);
     }
 
-    public List<LockRes> getAllByCategory(long categoryId, int page, int size, Long startPrice, Long endPrice, Color color, LockSize lockSize, String material) {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NOT_FOUND);
-        }
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdAt"));
-        return lockRepository.filterLocks(categoryId, startPrice, endPrice, pageable)
+    public List<LockRes> getAllByCategory(String lang, Long categoryId, int page, int size, Long startPrice, Long endPrice, Color color, LockSize lockSize, String material) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return lockRepository.filterLocks(categoryId, startPrice, endPrice, color, material, pageable)
                 .stream()
-                .filter(lock -> filterByColorSize(color, lock, material))
-                .map(this::entityToRes)
+                .filter(lock -> filterByLockSize(lock, lockSize))
+                .map(lock -> LockMapper.entityToDto(lock, lang))
                 .toList();
     }
 
-    private static boolean filterByColorSize(Color color, Lock lock, String material) {
-        if (lock.getFeature() == null) {
-            return color == null && material == null;
-        }
+    private Boolean filterByLockSize(Lock lock, LockSize lockSize) {
+        if (lockSize == null)
+            return true;
 
-        return (material == null || StringUtils.containsIgnoreCase(lock.getFeature().getMaterial(), material)) &&
-                ((color == null) || (lock.getFeature().getColors().contains(color)));
-    }
+        if (lock.getFeature() == null)
+            return true;
 
-
-    private LockRes entityToRes(Lock lock) {
-        return LockMapper.entityToDto(lock, getPhotoPaths(lock.getPhotoIds()));
-    }
-
-
-    private List<String> getPhotoPaths(List<UUID> lock) {
-        List<String> photos = new ArrayList<>();
-
-        for (UUID photoId : lock) {
-            Attachment attachment = attachmentRepository.findById(photoId)
-                    .orElseThrow(RestException.thew(ErrorTypeEnum.ATTACHMENT_NOT_FOUND));
-
-            photos.add(attachment.getFilePath());
-        }
-        return photos;
+        LockSize size = lock.getFeature().getLockSize();
+        return Objects.equals(size.getA(), lockSize.getA()) && Objects.equals(size.getB(), lockSize.getB()) && Objects.equals(size.getC(), lockSize.getC());
     }
 
 }

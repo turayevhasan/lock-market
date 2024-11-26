@@ -1,30 +1,37 @@
 package uz.pdp.lock_market.service;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.pdp.lock_market.config.UserPrincipal;
+import uz.pdp.lock_market.config.web.UserPrincipal;
 import uz.pdp.lock_market.config.jwt.JwtTokenProvider;
 import uz.pdp.lock_market.entity.Role;
 import uz.pdp.lock_market.entity.User;
 import uz.pdp.lock_market.enums.RoleEnum;
 import uz.pdp.lock_market.enums.UserStatus;
 import uz.pdp.lock_market.exceptions.RestException;
+import uz.pdp.lock_market.mapper.UserMapper;
 import uz.pdp.lock_market.payload.auth.req.RefreshTokenReq;
 import uz.pdp.lock_market.payload.auth.req.SignInReq;
 import uz.pdp.lock_market.payload.auth.req.SignUpReq;
+import uz.pdp.lock_market.payload.auth.req.VerifyAccountReq;
 import uz.pdp.lock_market.payload.auth.res.SignInRes;
-import uz.pdp.lock_market.payload.auth.res.UserRes;
 import uz.pdp.lock_market.payload.auth.res.TokenDto;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
+import uz.pdp.lock_market.payload.user.res.UserRes;
+import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.repository.RoleRepository;
 import uz.pdp.lock_market.repository.UserRepository;
 import uz.pdp.lock_market.util.BaseConstants;
+
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static uz.pdp.lock_market.enums.ErrorTypeEnum.*;
 
@@ -37,8 +44,17 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CodeService codeService;
+    private final AttachmentRepository attachmentRepository;
+    private final MessageSource messageSource;
 
-    public ResBaseMsg signUp(SignUpReq req) {
+    public ResBaseMsg signUp(String lang, SignUpReq req) {
+        Pattern pattern = Pattern.compile("^\\w*?[a-zA-Z]\\w+@[a-z\\d\\-]+(\\.[a-z\\d\\-]+)*\\.[a-z]+\\z");
+        Matcher matcher = pattern.matcher(req.getEmail());
+
+        if (!matcher.matches())
+            throw RestException.restThrow(EMAIL_NOT_VALID);
+
         if (userRepository.existsByEmail(req.getEmail()))
             throw RestException.restThrow(EMAIL_ALREADY_EXISTS);
 
@@ -51,30 +67,18 @@ public class AuthService {
                 .role(role)
                 .build();
 
-        try {
-            String link = "http://localhost:8080/api/v1/auth/activate/" + user.getEmail();
-            String body = "<a href=\"%s\">CLICK_TO_CONFIRM</a>".formatted(link);
-            mailService.sendMessage(user.getEmail(), body, "Please complete registration", "Complete Registration");
-        } catch (MessagingException e) {
-            throw RestException.restThrow(EMAIL_NOT_VALID);
-        }
-
         userRepository.save(user);
 
-        return new ResBaseMsg("Success! Verification Sms sent your Email!");
-    }
+        String code = codeService.generateCode(req.getEmail());
+        String body = String.format("<p class=\"code\">%s</p>", code);
 
-    public ResBaseMsg verifyEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(RestException.thew(USER_NOT_FOUND));
+        mailService.sendMessage(
+                user.getEmail(), body,
+                messageSource.getMessage("send.code.msg", null, Locale.of(lang)),
+                messageSource.getMessage("complete.registration", null, Locale.of(lang))
+        );
 
-        if (user.isActive())
-            return new ResBaseMsg("User Already Verified!");
-
-        user.setStatus(UserStatus.ACTIVE);
-        userRepository.save(user);
-
-        return new ResBaseMsg("User Successfully Verified!");
+        return new ResBaseMsg(messageSource.getMessage("auth.confirm.msg", null, Locale.of(lang)));
     }
 
 
@@ -86,6 +90,9 @@ public class AuthService {
                 ));
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        if (!userPrincipal.user().isActive())
+            throw RestException.restThrow(USER_NOT_ACTIVATED);
 
         return generateSignInRes(userPrincipal.user());
     }
@@ -117,7 +124,6 @@ public class AuthService {
             throw RestException.restThrow(WRONG_ACCESS_TOKEN);
         }
         throw RestException.restThrow(ACCESS_TOKEN_NOT_EXPIRED);
-
     }
 
     private static String getTokenWithOutBearer(String token) {
@@ -127,7 +133,7 @@ public class AuthService {
     }
 
     private SignInRes generateSignInRes(User user) {
-        UserRes userRes = new UserRes(user);
+        UserRes userRes = UserMapper.entityToRes(user);
         return new SignInRes(userRes, generateTokens(user));
     }
 
@@ -143,5 +149,20 @@ public class AuthService {
                 .accessTokenExpire(accessTokenExp)
                 .refreshTokenExpire(refreshTokenExp)
                 .build();
+    }
+
+    public ResBaseMsg verifyAccount(String lang, VerifyAccountReq req) {
+        User user = userRepository.findByEmail(req.getEmail())
+                .orElseThrow(RestException.thew(USER_NOT_FOUND));
+
+        if (user.isActive())
+            return new ResBaseMsg(messageSource.getMessage("already.verified", null, Locale.of(lang)));
+
+        codeService.checkVerify(req.getEmail(), req.getCode());
+
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(user);
+
+        return new ResBaseMsg(messageSource.getMessage("account.verified", null, Locale.of(lang)));
     }
 }

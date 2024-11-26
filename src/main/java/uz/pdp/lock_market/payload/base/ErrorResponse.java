@@ -12,7 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse implements Serializable {
-
     private String errorMsg;
 
     private Integer errorCode;

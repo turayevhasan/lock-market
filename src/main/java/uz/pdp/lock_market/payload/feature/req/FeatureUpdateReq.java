@@ -1,11 +1,7 @@
 package uz.pdp.lock_market.payload.feature.req;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import uz.pdp.lock_market.entity.base.Battery;
-import uz.pdp.lock_market.entity.base.DoorWidth;
-import uz.pdp.lock_market.entity.base.LockSize;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.enums.DoorType;
 import uz.pdp.lock_market.enums.UnlockType;
@@ -20,13 +16,17 @@ public class FeatureUpdateReq {
     private Integer memoryOfCards;
     private Boolean application;
     private List<Color> colors;
-    private String material;
-    private Battery battery;
-    private UnlockType unlockType;
+    private String materialUz;
+    private String materialEn;
+    private String materialRu;
+    private BatteryDto batteryDto;
+    private List<UnlockType> unlockTypes;
     private DoorType doorType;
-    private DoorWidth doorWidth;
-    private LockSize lockSize;
+    private DoorWidthDto doorWidthDto;
+    private LockSizeDto lockSizeReq;
     private Double weight;
-    private String equipment;
+    private String equipmentUz;
+    private String equipmentEn;
+    private String equipmentRu;
 }
 

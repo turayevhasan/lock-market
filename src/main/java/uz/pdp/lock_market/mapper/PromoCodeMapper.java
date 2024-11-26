@@ -9,6 +9,8 @@ import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 public interface PromoCodeMapper {
 
     static PromoCodeRes entityToDto(PromoCode promoCode) {
+        if(promoCode == null)
+            return null;
         return PromoCodeRes.builder()
                 .promoCode(promoCode.getCode())
                 .discountPrice(promoCode.getDiscountPrice())

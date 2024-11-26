@@ -1,10 +1,12 @@
 package uz.pdp.lock_market.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -34,6 +37,7 @@ import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ErrorResponse;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Objects;
 
 
@@ -42,14 +46,15 @@ import java.util.Objects;
 @Order(value = Integer.MIN_VALUE)
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
+    private final MessageSource messageSource;
 
-    // FOYDALANUVCHI TOMONIDAN XATO SODIR BO'LGANDA
+    // User errors
     @ExceptionHandler(value = {RestException.class})
-    public ResponseEntity<ApiResult<ErrorResponse>> handleException(RestException ex) {
-
+    public ResponseEntity<ApiResult<ErrorResponse>> handleException(RestException ex, HttpServletRequest request) {
         ErrorTypeEnum errorTypeEnum = ex.getErrorTypeEnum();
-        ErrorResponse errorData = new ErrorResponse(errorTypeEnum.name(), errorTypeEnum.getStatus().value());
+        String error = messageSource.getMessage(errorTypeEnum.getKey(), null, request.getLocale());
 
+        ErrorResponse errorData = new ErrorResponse(error, errorTypeEnum.getStatus().value());
         return new ResponseEntity<>(ApiResult.errorResponse(errorData), ex.getStatus());
     }
 
@@ -64,8 +69,9 @@ public class GlobalExceptionHandler {
                 .distinct()
                 .reduce("", String::concat);
         ObjectError objectError = ex.getBindingResult().getGlobalError();
-        String errorMessage = Objects.nonNull(objectError) ? "" + objectError.getDefaultMessage() : "Invalid request parameters";
+        String errorMessage = Objects.nonNull(objectError) ? objectError.getDefaultMessage() : "Invalid request parameters";
         if (StringUtils.hasText(errorFieldMessage)) {
+            assert errorMessage != null;
             errorMessage = errorMessage.concat(" (").concat(errorFieldMessage).concat(")");
         }
         return new ResponseEntity<>(ApiResult.errorResponse(errorMessage, 400), HttpStatus.BAD_REQUEST);
@@ -120,19 +126,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {AccessDeniedException.class})
-    public ResponseEntity<?> handleException(AccessDeniedException ex) {
+    public ResponseEntity<?> handleException(AccessDeniedException ex,  @RequestHeader("Accept-Language") String lang) {
         log.error("AccessDeniedException -> ", ex);
+        String error = messageSource.getMessage("dont.have.perm", null, Locale.forLanguageTag(lang));
         return new ResponseEntity<>(
-                ApiResult.errorResponse("DO_NOT_HAVE_PERMISSION_TO_USE_THIS_WAY", 400), //"Bu yo'lga kirishga huquq yo'q"
+                ApiResult.errorResponse(error, 400),
                 HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(value = {MissingPathVariableException.class})
-    public ResponseEntity<?> handleException(MissingPathVariableException ex) {
+    public ResponseEntity<?> handleException(MissingPathVariableException ex, HttpServletRequest request) {
         log.error("MissingPathVariableException -> ", ex);
+        String error = messageSource.getMessage("page.not.found", null, request.getLocale());
         return new ResponseEntity<>(
-                ApiResult.errorResponse("PAGE_NOT_FOUND", 404), //ex.me
+                ApiResult.errorResponse(error, 404), //ex.me
                 HttpStatus.NOT_FOUND);
     }
 
@@ -148,28 +156,32 @@ public class GlobalExceptionHandler {
 
     //METHOD XATO BO'LSA
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
-    public ResponseEntity<?> handleException(HttpRequestMethodNotSupportedException ex) {
+    public ResponseEntity<?> handleException(HttpRequestMethodNotSupportedException ex,  HttpServletRequest request) {
         log.error("HttpRequestMethodNotSupportedException -> ", ex);
+        String error = messageSource.getMessage("method.error", null, request.getLocale());
         return new ResponseEntity<>(
-                ApiResult.errorResponse("METHOD_ERROR", 405),
+                ApiResult.errorResponse(error, 405),
                 HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(value = {HttpMediaTypeNotAcceptableException.class})
-    public ResponseEntity<?> handleException(HttpMediaTypeNotAcceptableException ex) {
+    public ResponseEntity<?> handleException(HttpMediaTypeNotAcceptableException ex, HttpServletRequest request) {
         log.error("HttpMediaTypeNotAcceptableException -> ", ex);
+
+        String error = messageSource.getMessage("accept.error", null, request.getLocale());
         return new ResponseEntity<>(
-                ApiResult.errorResponse("UNACCEPTABLE", 406),
+                ApiResult.errorResponse(error, 406),
                 HttpStatus.NOT_ACCEPTABLE);
     }
 
 
     //METHOD XATO BO'LSA
     @ExceptionHandler(value = {HttpMediaTypeNotSupportedException.class})
-    public ResponseEntity<?> handleException(HttpMediaTypeNotSupportedException ex) {
+    public ResponseEntity<?> handleException(HttpMediaTypeNotSupportedException ex, HttpServletRequest request) {
         log.error("HttpMediaTypeNotSupportedException -> ", ex);
+        String error = messageSource.getMessage("media.type.error", null, request.getLocale());
         return new ResponseEntity<>(
-                ApiResult.errorResponse("METHOD_ERROR", 415),
+                ApiResult.errorResponse(error, 415),
                 HttpStatus.METHOD_NOT_ALLOWED);
     }
 

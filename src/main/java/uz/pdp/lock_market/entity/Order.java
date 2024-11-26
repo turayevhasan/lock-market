@@ -2,7 +2,7 @@ package uz.pdp.lock_market.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import uz.pdp.lock_market.entity.template.TimeLong;
+import uz.pdp.lock_market.entity.base.TimeLong;
 import uz.pdp.lock_market.enums.OrderStatus;
 
 import java.util.List;
@@ -15,38 +15,14 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 public class Order extends TimeLong {
-    @Column(nullable = false)
-    private String customerName;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private User user;
 
-    @Column(nullable = false)
-    private String customerSurname;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private OrderDetail orderDetail;
 
-    @Column(nullable = false)
-    private String customerPhone;
-
-    @Column(nullable = false)
-    private String customerEmail;
-
-    @Column(nullable = false)
-    private String deliveryType;
-
-    @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String branch;
-
-    @Column(nullable = false)
-    private String paymentType;
-
-    @Column(nullable = false)
-    private Boolean setupLock;
-
-    @Column(nullable = false)
-    private Boolean installSoft;
-
-    @Column(nullable = false)
-    private String promoCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PromoCode promoCode;
 
     @Column(nullable = false)
     private Long fullPrice;
@@ -55,6 +31,17 @@ public class Order extends TimeLong {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private OrderStatus status = OrderStatus.IN_PROGRESS;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String checkUz;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String checkRu;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String checkEn;
+
+    private String lang;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderLine> orderLines;

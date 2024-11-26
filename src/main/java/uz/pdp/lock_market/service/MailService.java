@@ -3,22 +3,20 @@ package uz.pdp.lock_market.service;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.pdp.lock_market.email.MailSenderService;
-import uz.pdp.lock_market.email.payload.SendEmailDto;
+import uz.pdp.lock_market.payload.mail.SendEmailDto;
 
 @Service
 @RequiredArgsConstructor
 public class MailService {
     private final MailSenderService mailSenderService;
 
-    public void sendMessage(String email, String body, String title, String subject) throws MessagingException {
+    public void sendMessage(String email, String body, String title, String subject) {
         String htmlContent = """
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>%s</title>
                     <style>
                         body {
                             font-family: Arial, sans-serif;
@@ -35,17 +33,17 @@ public class MailService {
                             overflow: hidden;
                         }
                         .header {
-                            background-color: #4CAF50;
+                            background-color: #4B9CD3;
                             color: white;
                             text-align: center;
                             padding: 20px;
                         }
                         .content {
                             padding: 30px;
-                            text-align: left;
+                            text-align: center;
                         }
                         .footer {
-                            background-color: #f4f4f4;
+                            background-color: #f1f1f1;
                             color: #777;
                             text-align: center;
                             padding: 15px;
@@ -55,18 +53,28 @@ public class MailService {
                             color: #4CAF50;
                             text-decoration: none;
                         }
+                        .code {
+                            font-size: 24px;
+                            font-weight: bold;
+                            color: #333;
+                            background-color: #f1f1f1;
+                            padding: 10px 20px;
+                            border-radius: 4px;
+                            margin: 20px auto;
+                            display: inline-block;
+                        }
                     </style>
                 </head>
                 <body>
                     <div class="container">
                         <div class="header">
-                            <h1>Your Order</h1>
+                            <h2>%s</h2>
                         </div>
                         <div class="content">
-                            <p>%s</p>
+                         %s
                         </div>
                         <div class="footer">
-                            <p>© 2024 Lock Market.</p>
+                            <p><b>© 2024 Food Recipe App.</b></p>
                         </div>
                     </div>
                 </body>
@@ -79,6 +87,10 @@ public class MailService {
                 .body(htmlContent)
                 .html(true)
                 .build();
-        mailSenderService.send(sendEmailDto);
+        try {
+            mailSenderService.send(sendEmailDto);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

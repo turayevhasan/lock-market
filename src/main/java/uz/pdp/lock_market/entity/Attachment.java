@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
-import uz.pdp.lock_market.entity.template.TimeUUID;
+import uz.pdp.lock_market.entity.base.TimeUUID;
 import uz.pdp.lock_market.util.BaseConstants;
 
 @Getter

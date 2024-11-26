@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.email.payload;
+package uz.pdp.lock_market.payload.mail;
 
 import lombok.*;
 

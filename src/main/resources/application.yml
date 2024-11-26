@@ -2,15 +2,19 @@ server:
   port: 8080
 
 spring:
+  messages:
+    basename: i18n/messages
   datasource:
     url: jdbc:postgresql://localhost:5432/lock_market
-    username: postgres
-    password:
+    username: turayevhasan
+    password: 2003
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
   servlet:
     multipart:
       max-file-size: 50MB

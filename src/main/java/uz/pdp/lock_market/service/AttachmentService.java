@@ -1,5 +1,6 @@
 package uz.pdp.lock_market.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,6 +30,7 @@ import static uz.pdp.lock_market.enums.ErrorTypeEnum.*;
 public class AttachmentService {
     private final AttachmentRepository attachmentRepository;
 
+    @Transactional
     public FileRes upload(MultipartFile file) {
         if (file == null || file.isEmpty())
             throw RestException.restThrow(FILE_NOT_FOUND);

@@ -14,7 +14,6 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class FileRes {
-    private UUID id;
     private String filePath;
 
     // Using Timestamp instead of LocalDateTime
