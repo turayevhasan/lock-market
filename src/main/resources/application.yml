@@ -5,9 +5,9 @@ spring:
   messages:
     basename: i18n/messages
   datasource:
-    url: jdbc:postgresql://localhost:5432/lock_market
-    username: turayevhasan
-    password: 2003
+    url: jdbc:postgresql://8.210.211.217:5432/lock_market
+    username: g38
+    password: YkwrJ5D2X
     driver-class-name: org.postgresql.Driver
 
   jpa:
