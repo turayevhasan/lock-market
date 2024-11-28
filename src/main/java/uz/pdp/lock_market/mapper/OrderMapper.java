@@ -1,15 +1,9 @@
 package uz.pdp.lock_market.mapper;
 
 import uz.pdp.lock_market.entity.Order;
-import uz.pdp.lock_market.entity.OrderLine;
 import uz.pdp.lock_market.payload.order.req.CustomerDto;
-import uz.pdp.lock_market.payload.order.req.OrderAddReq;
 import uz.pdp.lock_market.payload.order.req.OrderDetailDto;
-import uz.pdp.lock_market.payload.order.res.OrderLineRes;
 import uz.pdp.lock_market.payload.order.res.OrderRes;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public interface OrderMapper {
 

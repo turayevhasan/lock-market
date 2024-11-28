@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.payload.file.FileRes;
-import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.service.AttachmentService;
 import uz.pdp.lock_market.util.BaseURI;
 
@@ -43,6 +42,12 @@ public class AttachmentController {
     @DeleteMapping("/delete/{id}")
     public ApiResult<ResBaseMsg> deleteFile(@PathVariable UUID id) {
         return ApiResult.successResponse(service.delete(id));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping( "/delete/{filePath}")
+    public ApiResult<ResBaseMsg> deleteFile(@PathVariable("filePath") String filePath){
+        return ApiResult.successResponse(service.deleteByPath(filePath));
     }
 
 }

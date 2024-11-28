@@ -15,12 +15,6 @@ import java.util.Optional;
 
 @Repository
 public interface LockRepository extends JpaRepository<Lock, Long>, JpaSpecificationExecutor<Lock> {
-    Optional<Lock> findByNameUz(String nameUz);
-
-    Optional<Lock> findByNameRu(String nameRu);
-
-    Optional<Lock> findByNameEn(String nameEn);
-
     boolean existsByNameUz(String nameUz);
 
     boolean existsByNameEn(String nameEn);

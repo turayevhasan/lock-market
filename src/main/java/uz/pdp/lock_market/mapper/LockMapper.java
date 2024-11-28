@@ -2,6 +2,7 @@ package uz.pdp.lock_market.mapper;
 
 import uz.pdp.lock_market.entity.Lock;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
+import uz.pdp.lock_market.payload.lock.res.LockFullRes;
 import uz.pdp.lock_market.payload.lock.res.LockRes;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public interface LockMapper {
                     .photos(lock.getPhotos())
                     .lockType(lock.getLockType().getKey())
                     .hasGift(lock.getHasGift())
+                    .deleted(lock.isDeleted())
                     .createdAt(lock.getCreatedAt())
                     .updatedAt(lock.getUpdatedAt())
                     .build();
@@ -36,6 +38,7 @@ public interface LockMapper {
                     .photos(lock.getPhotos())
                     .lockType(lock.getLockType().getKey())
                     .hasGift(lock.getHasGift())
+                    .deleted(lock.isDeleted())
                     .createdAt(lock.getCreatedAt())
                     .updatedAt(lock.getUpdatedAt())
                     .build();
@@ -50,10 +53,32 @@ public interface LockMapper {
                     .photos(lock.getPhotos())
                     .lockType(lock.getLockType().getKey())
                     .hasGift(lock.getHasGift())
+                    .deleted(lock.isDeleted())
                     .createdAt(lock.getCreatedAt())
                     .updatedAt(lock.getUpdatedAt())
                     .build();
         };
+    }
+
+    static LockFullRes entityToFullRes(Lock lock) {
+        return LockFullRes.builder()
+                .id(lock.getId())
+                .nameUz(lock.getNameUz())
+                .nameEn(lock.getNameEn())
+                .nameRu(lock.getNameRu())
+                .descriptionUz(lock.getDescriptionUz())
+                .descriptionEn(lock.getDescriptionEn())
+                .descriptionRu(lock.getDescriptionRu())
+                .price(lock.getPrice())
+                .newPrice(lock.getNewPrice())
+                .categoryId(lock.getCategory().getId())
+                .photos(lock.getPhotos())
+                .lockType(lock.getLockType().getKey())
+                .hasGift(lock.getHasGift())
+                .deleted(lock.isDeleted())
+                .createdAt(lock.getCreatedAt())
+                .updatedAt(lock.getUpdatedAt())
+                .build();
     }
 
     static void updateDetails(Lock lock, LockUpdateReq req) {

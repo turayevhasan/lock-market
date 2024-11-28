@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.entity.LockSize;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.payload.base.ApiResult;
+import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.payload.lock.req.LockAddReq;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
+import uz.pdp.lock_market.payload.lock.res.LockFullRes;
 import uz.pdp.lock_market.payload.lock.res.LockRes;
 import uz.pdp.lock_market.service.LockService;
 import uz.pdp.lock_market.util.BaseURI;
@@ -24,19 +26,16 @@ public class LockController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public ApiResult<LockRes> addLock(
-            @RequestHeader(value = "Accept-Language", required = false) String lang,
-            @RequestBody @Valid LockAddReq req) {
-        return ApiResult.successResponse(lockService.add(lang, req));
+    public ApiResult<LockFullRes> addLock(@RequestBody @Valid LockAddReq req) {
+        return ApiResult.successResponse(lockService.add(req));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
-    public ApiResult<LockRes> updateLock(
-            @RequestHeader(value = "Accept-Language", required = false) String lang,
+    public ApiResult<LockFullRes> updateLock(
             @PathVariable("id") long id,
             @RequestBody @Valid LockUpdateReq req) {
-        return ApiResult.successResponse(lockService.update(lang, id, req));
+        return ApiResult.successResponse(lockService.update(id, req));
     }
 
     @GetMapping("/get/{id}")
@@ -44,6 +43,13 @@ public class LockController {
             @RequestHeader(value = "Accept-Language", required = false) String lang,
             @PathVariable("id") long id) {
         return ApiResult.successResponse(lockService.get(lang, id));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ApiResult<ResBaseMsg> deleteLock(
+            @RequestHeader(value = "Accept-Language", required = false) String lang,
+            @PathVariable("id") long id) {
+        return ApiResult.successResponse(lockService.delete(lang, id));
     }
 
     @GetMapping("/get-all-by-filter/{categoryId}")

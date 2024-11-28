@@ -44,7 +44,9 @@ public enum ErrorTypeEnum {
     USER_NOT_FOUND_OR_DISABLED("user.not.found.or.disabled", HttpStatus.FORBIDDEN),
     USER_PERMISSION_RESTRICTION("user.permission.restriction", HttpStatus.UNAUTHORIZED),
     WRONG_ACCESS_TOKEN("wrong.access.token", HttpStatus.UNAUTHORIZED),
-    PROMOCODE_NOT_FOUND("promo.not.found",HttpStatus.NOT_FOUND);
+    PROMOCODE_NOT_FOUND("promo.not.found", HttpStatus.NOT_FOUND),
+    LOCK_FEATURE_ALREADY_EXISTS("lock.feature.exists"),
+    CONTACT_NOT_FOUND("contact.not.found", HttpStatus.NOT_FOUND),;
 
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private final String key;

@@ -2,8 +2,9 @@ package uz.pdp.lock_market.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.pdp.lock_market.entity.*;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
@@ -26,7 +27,6 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
     private final LockRepository lockRepository;
     private final MailService mailService;
     private final OrderRepository orderRepository;
@@ -72,10 +72,6 @@ public class OrderService {
         checkEn.append("<b>Must be paid:</b> ").append(fullPrice).append("<br>");
         checkUz.append("<b>To'lanishi kerak:</b> ").append(fullPrice).append("<br>");
         checkRu.append("<b>Должно быть оплачено:</b> ").append(fullPrice).append("<br>");
-
-        if (GlobalVar.getUser() == null) {
-            throw RestException.restThrow(ErrorTypeEnum.USER_NOT_FOUND_OR_DISABLED);
-        }
 
         OrderDetailDto detailDto = req.getOrderDetailDto();
         CustomerDto customer = req.getCustomerDto();
@@ -165,7 +161,10 @@ public class OrderService {
             }
             case OrderStatus.PAID -> {
                 String body = messageSource.getMessage("paid.msg", null, Locale.of(order.getLang()));
-                sendMessage(order, body, "paid.title", "paid.subject");
+                sendMessage(order, body, "paid.title", "paid.title");
+
+                order.setStatus(OrderStatus.ARCHIVED);
+                orderRepository.save(order); //updated
             }
             case OrderStatus.CANCELLED -> {
                 String body = "<p>" + messageSource.getMessage("cancelled.msg", null, Locale.of(order.getLang())) + "</p>";
@@ -175,17 +174,13 @@ public class OrderService {
         return OrderMapper.entityToDto(order, lang);
     }
 
-    public ResBaseMsg delete(String lang, long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(RestException.thew(ErrorTypeEnum.ORDER_NOT_FOUND));
+    public List<OrderRes> getAll(String lang, int page, int size, OrderStatus status) {
+        Pageable pageable = PageRequest.of(page, size);
 
-        order.setDeleted(true);
-        orderRepository.save(order);//saved
-
-        order.getOrderLines().forEach(orderline -> orderline.setDeleted(true));
-        orderLineRepository.saveAll(order.getOrderLines()); //saved
-
-        return new ResBaseMsg(messageSource.getMessage("order.deleted", null, Locale.of(lang)));
+        return orderRepository.findAllByStatus(status, pageable)
+                .stream()
+                .map(order -> OrderMapper.entityToDto(order, lang))
+                .toList();
     }
 
     private void sendMessage(Order order, String body, String titleKey, String subjectKey) {

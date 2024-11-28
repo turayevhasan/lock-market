@@ -28,6 +28,7 @@ import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.repository.RoleRepository;
 import uz.pdp.lock_market.repository.UserRepository;
 import uz.pdp.lock_market.util.BaseConstants;
+import uz.pdp.lock_market.util.FormatPatterns;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -49,7 +50,7 @@ public class AuthService {
     private final MessageSource messageSource;
 
     public ResBaseMsg signUp(String lang, SignUpReq req) {
-        Pattern pattern = Pattern.compile("^\\w*?[a-zA-Z]\\w+@[a-z\\d\\-]+(\\.[a-z\\d\\-]+)*\\.[a-z]+\\z");
+        Pattern pattern = Pattern.compile(FormatPatterns.EMAIL_REGEX);
         Matcher matcher = pattern.matcher(req.getEmail());
 
         if (!matcher.matches())

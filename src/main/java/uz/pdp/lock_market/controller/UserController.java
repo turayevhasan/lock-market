@@ -13,8 +13,6 @@ import uz.pdp.lock_market.payload.user.res.UserRes;
 import uz.pdp.lock_market.service.UserService;
 import uz.pdp.lock_market.util.BaseURI;
 
-import java.util.Locale;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BaseURI.API1 + BaseURI.USER)

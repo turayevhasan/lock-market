@@ -14,12 +14,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LockRes {
+public class LockFullRes {
     private Long id;
 
-    private String name;
+    private String nameUz;
+    private String nameRu;
+    private String nameEn;
 
-    private String description;
+    private String descriptionUz;
+    private String descriptionRu;
+    private String descriptionEn;
 
     private Long price;
 

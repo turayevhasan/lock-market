@@ -12,6 +12,7 @@ import uz.pdp.lock_market.exceptions.RestException;
 import uz.pdp.lock_market.payload.category.req.CategoryUpdateReq;
 import uz.pdp.lock_market.payload.category.req.CategoryAddReq;
 import uz.pdp.lock_market.mapper.CategoryMapper;
+import uz.pdp.lock_market.payload.category.res.CategoryFullRes;
 import uz.pdp.lock_market.payload.category.res.CategoryRes;
 import uz.pdp.lock_market.repository.CategoryRepository;
 
@@ -27,7 +28,7 @@ import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public CategoryRes add(String lang, CategoryAddReq req) {
+    public CategoryFullRes add(CategoryAddReq req) {
         if (categoryRepository.existsByNameUz(req.getNameUz()))
             throw RestException.restThrow(ErrorTypeEnum.CATEGORY_NAME_UZ_ALREADY_EXISTS);
 
@@ -50,10 +51,10 @@ public class CategoryService {
 
         categoryRepository.save(category);  //saving
 
-        return CategoryMapper.entityToDto(category, lang);
+        return CategoryMapper.entityToFullDto(category);
     }
 
-    public CategoryRes update(String lang, long id, CategoryUpdateReq req) {
+    public CategoryFullRes update(long id, CategoryUpdateReq req) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(RestException.thew(ErrorTypeEnum.CATEGORY_NOT_FOUND));
 
@@ -78,7 +79,7 @@ public class CategoryService {
         }
         categoryRepository.save(category); //updating
 
-        return CategoryMapper.entityToDto(category, lang);
+        return CategoryMapper.entityToFullDto(category);
     }
 
     public CategoryRes getOne(String lang, long id) {

@@ -12,7 +12,7 @@ import uz.pdp.lock_market.payload.order.res.OrderRes;
 import uz.pdp.lock_market.service.OrderService;
 import uz.pdp.lock_market.util.BaseURI;
 
-import java.util.Locale;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ import java.util.Locale;
 public class OrderController {
     private final OrderService orderService;
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public ApiResult<ResBaseMsg> create(
             @RequestHeader(value = "Accept-Language", required = false) String lang,
@@ -43,5 +43,15 @@ public class OrderController {
             @PathVariable("id") long id,
             @RequestParam OrderStatus status) {
         return ApiResult.successResponse(orderService.updateStatus(lang, id, status));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-all")
+    public ApiResult<List<OrderRes>> getAll(
+            @RequestHeader(value = "Accept-Language", required = false) String lang,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam OrderStatus status) {
+        return ApiResult.successResponse(orderService.getAll(lang,page, size, status));
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.payload.category.req.CategoryUpdateReq;
 import uz.pdp.lock_market.payload.category.req.CategoryAddReq;
+import uz.pdp.lock_market.payload.category.res.CategoryFullRes;
 import uz.pdp.lock_market.payload.category.res.CategoryRes;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.service.CategoryService;
@@ -22,19 +23,16 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public ApiResult<CategoryRes> addCategory(
-            @RequestHeader(value = "Accept-Language", required = false) String lang,
-            @RequestBody @Valid CategoryAddReq req) {
-        return ApiResult.successResponse(categoryService.add(lang, req));
+    public ApiResult<CategoryFullRes> addCategory(@RequestBody @Valid CategoryAddReq req) {
+        return ApiResult.successResponse(categoryService.add(req));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
-    public ApiResult<CategoryRes> updateCategory(
-            @RequestHeader(value = "Accept-Language", required = false) String lang,
+    public ApiResult<CategoryFullRes> updateCategory(
             @PathVariable("id") long id,
             @RequestBody CategoryUpdateReq req) {
-        return ApiResult.successResponse(categoryService.update(lang, id, req));
+        return ApiResult.successResponse(categoryService.update(id, req));
     }
 
     @GetMapping("/get/{id}")

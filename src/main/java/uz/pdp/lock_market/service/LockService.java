@@ -2,6 +2,7 @@ package uz.pdp.lock_market.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,8 +15,10 @@ import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
 import uz.pdp.lock_market.mapper.LockMapper;
+import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.payload.lock.req.LockAddReq;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
+import uz.pdp.lock_market.payload.lock.res.LockFullRes;
 import uz.pdp.lock_market.payload.lock.res.LockRes;
 import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.repository.CategoryRepository;
@@ -32,8 +35,9 @@ import java.util.Objects;
 public class LockService {
     private final LockRepository lockRepository;
     private final CategoryRepository categoryRepository;
+    private final ResourceBundleMessageSource messageSource;
 
-    public LockRes add(String lang, LockAddReq req) {
+    public LockFullRes add(LockAddReq req) {
         if (lockRepository.existsByNameUz(req.getNameUz())) {
             throw RestException.restThrow(ErrorTypeEnum.LOCK_NAME_UZ_ALREADY_EXISTS);
         }
@@ -70,10 +74,10 @@ public class LockService {
 
         lockRepository.save(lock); //saving
 
-        return LockMapper.entityToDto(lock, lang);
+        return LockMapper.entityToFullRes(lock);
     }
 
-    public LockRes update(String lang, Long lockId, LockUpdateReq req) {
+    public LockFullRes update(Long lockId, LockUpdateReq req) {
         Lock lock = lockRepository.findById(lockId)
                 .orElseThrow(() -> RestException.restThrow(ErrorTypeEnum.LOCK_NOT_FOUND));
 
@@ -97,7 +101,7 @@ public class LockService {
         LockMapper.updateDetails(lock, req);
         lockRepository.save(lock); //saving
 
-        return LockMapper.entityToDto(lock, lang);
+        return LockMapper.entityToFullRes(lock);
     }
 
     public LockRes get(String lang, Long lockId) {
@@ -128,4 +132,13 @@ public class LockService {
         return Objects.equals(size.getA(), lockSize.getA()) && Objects.equals(size.getB(), lockSize.getB()) && Objects.equals(size.getC(), lockSize.getC());
     }
 
+    public ResBaseMsg delete(String lang, long id) {
+        Lock lock = lockRepository.findById(id)
+                .orElseThrow(() -> RestException.restThrow(ErrorTypeEnum.LOCK_NOT_FOUND));
+
+        lock.setDeleted(true);
+        lockRepository.save(lock);
+
+        return new ResBaseMsg(messageSource.getMessage("lock.deleted", null, Locale.of(lang)));
+    }
 }

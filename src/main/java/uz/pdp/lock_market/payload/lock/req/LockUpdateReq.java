@@ -6,7 +6,6 @@ import lombok.Setter;
 import uz.pdp.lock_market.enums.LockType;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter

@@ -15,12 +15,4 @@ public interface AttachmentMapper {
                 .fileSize(file.getSize())
                 .build();
     }
-
-    static FileRes fromEntityToResDto(Attachment attachment) {
-        return new FileRes(
-                attachment.getFilePath(),
-                attachment.getCreatedAt(),
-                attachment.getUpdatedAt()
-        );
-    }
 }

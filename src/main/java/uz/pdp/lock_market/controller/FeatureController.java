@@ -12,8 +12,6 @@ import uz.pdp.lock_market.payload.feature.res.FeatureRes;
 import uz.pdp.lock_market.service.FeatureService;
 import uz.pdp.lock_market.util.BaseURI;
 
-import java.util.Locale;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BaseURI.API1 + BaseURI.FEATURE)

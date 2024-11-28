@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import uz.pdp.lock_market.entity.base.BaseEntityUUID;
 import uz.pdp.lock_market.entity.base.TimeUUID;
 import uz.pdp.lock_market.util.BaseConstants;
 
@@ -14,7 +15,7 @@ import uz.pdp.lock_market.util.BaseConstants;
 @Builder
 @Entity
 @Table(name = "attachment")
-public class Attachment extends TimeUUID {
+public class Attachment extends BaseEntityUUID {
     @Column(nullable = false)
     private String originalName;
 

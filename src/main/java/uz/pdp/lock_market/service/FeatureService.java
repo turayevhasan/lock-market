@@ -29,6 +29,9 @@ public class FeatureService {
         Lock lock = lockRepository.findById(req.getLockId())
                 .orElseThrow(RestException.thew(ErrorTypeEnum.LOCK_NOT_FOUND));
 
+        if(lock.getFeature() != null)
+            throw RestException.restThrow(ErrorTypeEnum.LOCK_FEATURE_ALREADY_EXISTS);
+
         DoorWidth doorWidth = doorWidthRepository.save(new DoorWidth(req.getDoorWidthDto()));
         LockSize lockSize = lockSizeRepository.save(new LockSize(req.getLockSizeReq()));
         Battery battery = batteryRepository.save(new Battery(req.getBatteryDto()));

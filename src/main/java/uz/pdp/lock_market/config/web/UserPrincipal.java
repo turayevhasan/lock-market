@@ -15,7 +15,7 @@ public record UserPrincipal(User user) implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
         return grantedAuthorities;
     }
 

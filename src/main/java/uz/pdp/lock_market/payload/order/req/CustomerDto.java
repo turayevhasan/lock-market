@@ -2,9 +2,11 @@ package uz.pdp.lock_market.payload.order.req;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import uz.pdp.lock_market.entity.OrderDetail;
 
 @Data
+@NoArgsConstructor
 public class CustomerDto {
     @NotBlank
     private String name;

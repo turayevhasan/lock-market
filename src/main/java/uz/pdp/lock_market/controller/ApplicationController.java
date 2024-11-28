@@ -28,12 +28,14 @@ public class ApplicationController {
         return ApiResult.successResponse(applicationService.add(lang, req));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ApiResult<ApplicationRes> updateApp(
             @PathVariable("id") long id,
             @RequestBody ApplicationUpdateReq req) {
         return ApiResult.successResponse(applicationService.update(id, req));
     }
+
 
     @GetMapping("/get/{id}")
     public ApiResult<ApplicationRes> getApp(@PathVariable long id) {

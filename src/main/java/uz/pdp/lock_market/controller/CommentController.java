@@ -14,7 +14,6 @@ import uz.pdp.lock_market.service.CommentService;
 import uz.pdp.lock_market.util.BaseURI;
 
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
