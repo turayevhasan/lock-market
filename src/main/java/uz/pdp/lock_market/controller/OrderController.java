@@ -51,7 +51,7 @@ public class OrderController {
             @RequestHeader(value = "Accept-Language", required = false) String lang,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam OrderStatus status) {
+            @RequestParam(value = "status", required = false) OrderStatus status) {
         return ApiResult.successResponse(orderService.getAll(lang,page, size, status));
     }
 }

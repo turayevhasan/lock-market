@@ -8,6 +8,7 @@ import uz.pdp.lock_market.entity.LockSize;
 import uz.pdp.lock_market.enums.Color;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
+import uz.pdp.lock_market.payload.feature.req.LockSizeDto;
 import uz.pdp.lock_market.payload.lock.req.LockAddReq;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
 import uz.pdp.lock_market.payload.lock.res.LockFullRes;
@@ -52,16 +53,16 @@ public class LockController {
         return ApiResult.successResponse(lockService.delete(lang, id));
     }
 
-    @GetMapping("/get-all-by-filter/{categoryId}")
+    @GetMapping("/get-all-by-filter")
     public ApiResult<List<LockRes>> getAllLockByCategory(
             @RequestHeader(value = "Accept-Language", required = false) String lang,
-            @PathVariable("categoryId") Long categoryId,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Long startPrice,
             @RequestParam(required = false) Long endPrice,
             @RequestParam(required = false) Color color,
-            @RequestParam(required = false) LockSize lockSize,
+            @RequestParam(required = false) LockSizeDto lockSize,
             @RequestParam(required = false) String material) {
         return ApiResult.successResponse(lockService.getAllByCategory(lang, categoryId, page, size, startPrice, endPrice, color, lockSize, material));
     }

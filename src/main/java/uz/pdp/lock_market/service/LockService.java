@@ -1,12 +1,9 @@
 package uz.pdp.lock_market.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import uz.pdp.lock_market.entity.Category;
 import uz.pdp.lock_market.entity.Lock;
@@ -16,11 +13,11 @@ import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
 import uz.pdp.lock_market.mapper.LockMapper;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
+import uz.pdp.lock_market.payload.feature.req.LockSizeDto;
 import uz.pdp.lock_market.payload.lock.req.LockAddReq;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
 import uz.pdp.lock_market.payload.lock.res.LockFullRes;
 import uz.pdp.lock_market.payload.lock.res.LockRes;
-import uz.pdp.lock_market.repository.AttachmentRepository;
 import uz.pdp.lock_market.repository.CategoryRepository;
 import uz.pdp.lock_market.repository.LockRepository;
 
@@ -111,7 +108,7 @@ public class LockService {
         return LockMapper.entityToDto(lock, lang);
     }
 
-    public List<LockRes> getAllByCategory(String lang, Long categoryId, int page, int size, Long startPrice, Long endPrice, Color color, LockSize lockSize, String material) {
+    public List<LockRes> getAllByCategory(String lang, Long categoryId, int page, int size, Long startPrice, Long endPrice, Color color, LockSizeDto lockSize, String material) {
         Pageable pageable = PageRequest.of(page, size);
 
         return lockRepository.filterLocks(categoryId, startPrice, endPrice, color, material, pageable)
@@ -121,7 +118,7 @@ public class LockService {
                 .toList();
     }
 
-    private Boolean filterByLockSize(Lock lock, LockSize lockSize) {
+    private Boolean filterByLockSize(Lock lock, LockSizeDto lockSize) {
         if (lockSize == null)
             return true;
 

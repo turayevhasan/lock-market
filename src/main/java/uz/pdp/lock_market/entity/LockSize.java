@@ -3,6 +3,7 @@ package uz.pdp.lock_market.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.*;
 import uz.pdp.lock_market.entity.base.TimeLong;
 import uz.pdp.lock_market.payload.feature.req.LockSizeDto;
@@ -23,6 +24,7 @@ public class LockSize extends TimeLong {
 
     @Column(nullable = false)
     private Double c;
+
 
     public LockSize(LockSizeDto req) {
         this.a = req.getA();
