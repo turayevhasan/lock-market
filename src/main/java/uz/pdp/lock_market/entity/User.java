@@ -6,7 +6,6 @@ import uz.pdp.lock_market.entity.base.TimeUUID;
 import uz.pdp.lock_market.enums.UserStatus;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -38,6 +37,9 @@ public class User extends TimeUUID {
         return this.status == UserStatus.ACTIVE;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<Order> orders;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private List<Basket> baskets;
 }

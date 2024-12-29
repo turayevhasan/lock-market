@@ -4,7 +4,9 @@ import uz.pdp.lock_market.entity.Lock;
 import uz.pdp.lock_market.payload.lock.req.LockUpdateReq;
 import uz.pdp.lock_market.payload.lock.res.LockFullRes;
 import uz.pdp.lock_market.payload.lock.res.LockRes;
+import uz.pdp.lock_market.util.BaseConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
@@ -12,6 +14,11 @@ import static uz.pdp.lock_market.util.CoreUtils.getIfExists;
 public interface LockMapper {
 
     static LockRes entityToDto(Lock lock, String lang) {
+        List<String> photos = new ArrayList<>();
+        for (String photo : lock.getPhotos()) {
+            if (photo != null && !photo.isEmpty())
+                photos.add(BaseConstants.SERVER_HOST + photo);
+        }
         return switch (lang) {
             case "uz" -> LockRes.builder()
                     .id(lock.getId())
@@ -20,7 +27,7 @@ public interface LockMapper {
                     .price(lock.getPrice())
                     .newPrice(lock.getNewPrice())
                     .categoryId(lock.getCategory().getId())
-                    .photos(lock.getPhotos())
+                    .photos(photos)
                     .lockType(lock.getLockType().getKey())
                     .hasGift(lock.getHasGift())
                     .deleted(lock.isDeleted())
@@ -35,7 +42,7 @@ public interface LockMapper {
                     .price(lock.getPrice())
                     .newPrice(lock.getNewPrice())
                     .categoryId(lock.getCategory().getId())
-                    .photos(lock.getPhotos())
+                    .photos(photos)
                     .lockType(lock.getLockType().getKey())
                     .hasGift(lock.getHasGift())
                     .deleted(lock.isDeleted())
@@ -50,7 +57,7 @@ public interface LockMapper {
                     .price(lock.getPrice())
                     .newPrice(lock.getNewPrice())
                     .categoryId(lock.getCategory().getId())
-                    .photos(lock.getPhotos())
+                    .photos(photos)
                     .lockType(lock.getLockType().getKey())
                     .hasGift(lock.getHasGift())
                     .deleted(lock.isDeleted())
@@ -61,6 +68,11 @@ public interface LockMapper {
     }
 
     static LockFullRes entityToFullRes(Lock lock) {
+        List<String> photos = new ArrayList<>();
+        for (String photo : lock.getPhotos()) {
+            if (photo != null && !photo.isEmpty())
+                photos.add(BaseConstants.SERVER_HOST + photo);
+        }
         return LockFullRes.builder()
                 .id(lock.getId())
                 .nameUz(lock.getNameUz())
@@ -72,7 +84,7 @@ public interface LockMapper {
                 .price(lock.getPrice())
                 .newPrice(lock.getNewPrice())
                 .categoryId(lock.getCategory().getId())
-                .photos(lock.getPhotos())
+                .photos(photos)
                 .lockType(lock.getLockType().getKey())
                 .hasGift(lock.getHasGift())
                 .deleted(lock.isDeleted())

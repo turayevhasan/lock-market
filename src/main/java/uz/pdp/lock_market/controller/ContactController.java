@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.lock_market.entity.Contact;
-import uz.pdp.lock_market.payload.ContactAddReq;
+import uz.pdp.lock_market.payload.contact.ContactAddReq;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.service.ContactService;

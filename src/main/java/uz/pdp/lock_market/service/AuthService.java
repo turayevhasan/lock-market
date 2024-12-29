@@ -46,7 +46,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final CodeService codeService;
-    private final AttachmentRepository attachmentRepository;
     private final MessageSource messageSource;
 
     public ResBaseMsg signUp(String lang, SignUpReq req) {
@@ -65,21 +64,22 @@ public class AuthService {
         User user = User.builder()
                 .email(req.getEmail())
                 .password(passwordEncoder.encode(req.getPassword()))
+                .status(UserStatus.ACTIVE)
                 .role(role)
                 .build();
 
         userRepository.save(user);
 
-        String code = codeService.generateCode(req.getEmail());
-        String body = String.format("<p class=\"code\">%s</p>", code);
+//        String code = codeService.generateCode(req.getEmail());
+//        String body = String.format("<p class=\"code\">%s</p>", code);
 
-        mailService.sendMessage(
-                user.getEmail(), body,
-                messageSource.getMessage("send.code.msg", null, Locale.of(lang)),
-                messageSource.getMessage("complete.registration", null, Locale.of(lang))
-        );
+//        mailService.sendMessage(
+//                user.getEmail(), body,
+//                messageSource.getMessage("send.code.msg", null, Locale.of(lang)),
+//                messageSource.getMessage("complete.registration", null, Locale.of(lang))
+//        );
 
-        return new ResBaseMsg(messageSource.getMessage("auth.confirm.msg", null, Locale.of(lang)));
+        return new ResBaseMsg(messageSource.getMessage("account.verified", null, Locale.of(lang)));
     }
 
 

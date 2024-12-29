@@ -7,7 +7,6 @@ import uz.pdp.lock_market.enums.RoleEnum;
 import uz.pdp.lock_market.enums.UserStatus;
 import uz.pdp.lock_market.payload.base.ApiResult;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
-import uz.pdp.lock_market.payload.user.res.UserRes;
 import uz.pdp.lock_market.service.AdminService;
 import uz.pdp.lock_market.util.BaseURI;
 

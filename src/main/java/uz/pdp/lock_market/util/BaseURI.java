@@ -14,4 +14,5 @@ public interface BaseURI {
     String USER = "/user";
     String CONTACT = "/contact";
     String ADMIN = "/admin";
+    String BASKET = "/basket";
 }

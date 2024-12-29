@@ -54,6 +54,9 @@ public class UserService {
         if (user == null)
             throw RestException.restThrow(ErrorTypeEnum.USER_NOT_FOUND_OR_DISABLED);
 
+        if (!passwordEncoder.matches(req.getOldPassword(), user.getPassword()))
+            throw RestException.restThrow(ErrorTypeEnum.OLD_PASSWORD_NOT_MATCH);
+
         if (!req.getNewPassword().equals(req.getConfirmNewPassword()))
             throw RestException.restThrow(ErrorTypeEnum.CONFIRM_PASSWORD_NOT_MATCH);
 

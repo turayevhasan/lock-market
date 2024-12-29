@@ -46,7 +46,10 @@ public enum ErrorTypeEnum {
     WRONG_ACCESS_TOKEN("wrong.access.token", HttpStatus.UNAUTHORIZED),
     PROMOCODE_NOT_FOUND("promo.not.found", HttpStatus.NOT_FOUND),
     LOCK_FEATURE_ALREADY_EXISTS("lock.feature.exists"),
-    CONTACT_NOT_FOUND("contact.not.found", HttpStatus.NOT_FOUND),;
+    CONTACT_NOT_FOUND("contact.not.found", HttpStatus.NOT_FOUND),
+    OLD_PASSWORD_NOT_MATCH("old.password.not.match"),
+    BASKET_NOT_FOUND("basket.not.found", HttpStatus.NOT_FOUND),
+    BASKET_ALREADY_EXISTS("basket.already.exists", HttpStatus.CONFLICT);
 
     private HttpStatus status = HttpStatus.BAD_REQUEST;
     private final String key;

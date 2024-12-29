@@ -42,7 +42,7 @@ public class AuthController {
         return ApiResult.successResponse(authService.signIn(req));
     }
 
-    @GetMapping("/refresh-token")
+    @PostMapping("/refresh-token")
     ApiResult<TokenDto> refreshToken(@Valid @RequestBody RefreshTokenReq req) {
         return ApiResult.successResponse(authService.refreshToken(req));
     }

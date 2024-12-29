@@ -10,7 +10,7 @@
     </parent>
     <groupId>uz.pdp</groupId>
     <artifactId>lock-market</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>lock-market</name>
     <description>lock-market</description>
     <url/>

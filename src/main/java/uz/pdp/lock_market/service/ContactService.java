@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import uz.pdp.lock_market.entity.Contact;
 import uz.pdp.lock_market.enums.ErrorTypeEnum;
 import uz.pdp.lock_market.exceptions.RestException;
-import uz.pdp.lock_market.payload.ContactAddReq;
+import uz.pdp.lock_market.payload.contact.ContactAddReq;
 import uz.pdp.lock_market.payload.base.ResBaseMsg;
 import uz.pdp.lock_market.repository.ContactRepository;
 import uz.pdp.lock_market.util.FormatPatterns;

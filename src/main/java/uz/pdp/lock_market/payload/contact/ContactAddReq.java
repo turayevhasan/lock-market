@@ -1,4 +1,4 @@
-package uz.pdp.lock_market.payload;
+package uz.pdp.lock_market.payload.contact;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

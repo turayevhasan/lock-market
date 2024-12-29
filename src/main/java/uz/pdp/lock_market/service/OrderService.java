@@ -23,6 +23,7 @@ import uz.pdp.lock_market.util.GlobalVar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,8 @@ public class OrderService {
     private final PromoCodeRepository promoCodeRepository;
     private final MessageSource messageSource;
     private final OrderDetailRepository orderDetailRepository;
+    private final BasketRepository basketRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ResBaseMsg addOrder(String lang, OrderAddReq req) {
@@ -121,6 +124,10 @@ public class OrderService {
         }
         orderLineRepository.saveAll(lines); //order lines saved
 
+        UUID userId = GlobalVar.getUser().getId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(RestException.thew(ErrorTypeEnum.USER_NOT_FOUND_OR_DISABLED));
+        basketRepository.deleteAll(user.getBaskets()); //deleted baskets
         return new ResBaseMsg(messageSource.getMessage("order.received", null, Locale.of(lang)));
     }
 

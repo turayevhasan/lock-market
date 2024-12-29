@@ -56,7 +56,7 @@ public class LockController {
     @GetMapping("/get-all-by-filter")
     public ApiResult<List<LockRes>> getAllLockByCategory(
             @RequestHeader(value = "Accept-Language", required = false) String lang,
-            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(name = "categoryId", required = false) Long categoryId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Long startPrice,

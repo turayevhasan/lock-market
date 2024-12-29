@@ -20,6 +20,7 @@ import uz.pdp.lock_market.payload.lock.res.LockFullRes;
 import uz.pdp.lock_market.payload.lock.res.LockRes;
 import uz.pdp.lock_market.repository.CategoryRepository;
 import uz.pdp.lock_market.repository.LockRepository;
+import uz.pdp.lock_market.util.BaseConstants;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
